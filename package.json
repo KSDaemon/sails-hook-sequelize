@@ -1,0 +1,42 @@
+{
+  "name": "sails-hook-sequelize",
+  "version": "0.0.1",
+  "description": "Sails.js hook to use sequelize ORM",
+  "main": "index.js",
+  "sails": {
+    "isHook": true
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha test/bootstrap.test.js test/unit/**/*.test.js"
+  },
+  "keywords": [
+    "sails",
+    "sequelize",
+    "orm"
+  ],
+  "author": "Gergely Munkacsy",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "^2.2.5",
+    "pg": "^4.4.0",
+    "pg-hstore": "^2.3.2",
+    "sails": "^0.11.0",
+    "should": "^7.0.2",
+    "supertest": "^1.0.1"
+  },
+  "dependencies": {
+    "continuation-local-storage": "^3.1.4",
+    "sequelize": "^3.5.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:festo/sails-hook-sequelize.git"
+  },
+  "bugs": {
+    "url": "https://github.com/festo/sails-hook-sequelize/issues"
+  },
+  "homepage": "https://github.com/festo/sails-hook-sequelize"
+}

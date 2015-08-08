@@ -1,5 +1,5 @@
 /**
-* User.js
+* UserGroup.js
 *
 * @description :: TODO: You might write a short summary of how this model works and what it represents here.
 * @docs        :: http://sailsjs.org/#!documentation/models
@@ -10,25 +10,26 @@ module.exports = {
   	name: {
   		type: Sequelize.STRING
   	},
-    age: {
-    	type: Sequelize.INTEGER
+    role: {
+    	type: Sequelize.ENUM('USER', 'ADMIN')
     }    
   },
   associations: function () {
-  	User.hasMany(Image, {as: 'images', foreignKey: 'owner'});
+  	UserGroup.hasMany(User, {as: 'users', foreignKey: 'group'});
   },
   defaultScope: function() {
     return {
       include: [
-        {model: Image, as: 'images'}
+        {model: User, as: 'users'}
       ]
-    }
+    };
   },
   options: {
     freezeTableName: false,
-    tableName: 'user',
+    tableName: 'user_group',
     classMethods: {},
     instanceMethods: {},
     hooks: {}
   }
 };
+

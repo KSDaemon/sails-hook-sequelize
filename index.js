@@ -3,8 +3,9 @@ module.exports = function(sails) {
   Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
   return {
     initialize: function(next) {
-      this.initAdapters();
-      this.initModels();
+      var hook = this;
+      hook.initAdapters();
+      hook.initModels();
 
       var connection, migrate, sequelize;
       sails.log.verbose('Using connection named ' + sails.config.models.connection);
@@ -33,22 +34,12 @@ module.exports = function(sails) {
           global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
           sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
         }
+
         for (modelName in models) {
           modelDef = models[modelName];
-          if (modelDef.associations != null) {
-            sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
-            if (typeof modelDef.associations === 'function') {
-              modelDef.associations(modelDef);
-            }
-          }
 
-          if (modelDef.defaultScope != null) {
-            sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
-            var model = global[modelDef.globalId];
-            if (typeof modelDef.defaultScope === 'function') {
-              model.$scope = modelDef.defaultScope();
-            }
-          }
+          hook.setAssociation(modelDef);          
+          hook.setDefaultScope(modelDef);          
         }
 
         if(migrate === 'safe') {
@@ -71,6 +62,25 @@ module.exports = function(sails) {
     initModels: function() {
       if(sails.models === undefined) {
         sails.models = {};
+      }
+    },
+
+    setAssociation: function(modelDef) {
+      if (modelDef.associations != null) {
+        sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
+        if (typeof modelDef.associations === 'function') {
+          modelDef.associations(modelDef);
+        }
+      }
+    },
+
+    setDefaultScope: function(modelDef) {
+      if (modelDef.defaultScope != null) {
+        sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
+        var model = global[modelDef.globalId];
+        if (typeof modelDef.defaultScope === 'function') {
+          model.$scope = modelDef.defaultScope() || {};
+        }
       }
     }
   };

@@ -20,7 +20,7 @@ describe('Sails.js Sequelize hook tests ::', function() {
         "pubsub": false,
         // Skip grunt (unless your hook uses it)
         "grunt": false,
-      } 
+      }
     },function (err, _sails) {
         if (err) return done(err);
         sails = _sails;

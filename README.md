@@ -17,9 +17,12 @@ $ npm install sails-hook-sequelize --save
 
 `.sailsrc`
 ````
-"hooks": {
-  "orm": false,
-  "pubsub": false
+{
+  "hooks": {
+    "blueprints": false,
+    "orm": false,
+    "pubsub": false
+  }
 }
 ```
 
@@ -27,6 +30,7 @@ $ npm install sails-hook-sequelize --save
 Sequelize connection
 ```javascript
 somePostgresqlServer: {
+  adapter: 'sails-hook-sequelize',
   user: 'postgres',
   password: '',
   database: 'sequelize',

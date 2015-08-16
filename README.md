@@ -17,9 +17,11 @@ $ npm install sails-hook-sequelize --save
 
 `.sailsrc`
 ````
-"hooks": {
-  "orm": false,
-  "pubsub": false
+{
+  "hooks": {
+    "orm": false,
+    "pubsub": false
+  }
 }
 ```
 

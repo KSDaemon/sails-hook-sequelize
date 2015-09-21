@@ -79,7 +79,8 @@ module.exports = function(sails) {
         sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
         var model = global[modelDef.globalId];
         if (typeof modelDef.defaultScope === 'function') {
-          model.$scope = modelDef.defaultScope() || {};
+          var defaultScope = modelDef.defaultScope() || {};
+          model.addScope('defaultScope',defaultScope,{override: true});
         }
       }
     }

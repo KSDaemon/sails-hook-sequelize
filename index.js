@@ -1,7 +1,22 @@
+"use strict";
+
 module.exports = function(sails) {
-  global['Sequelize'] = require('sequelize');
-  Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
+  var Sequelize = require('sequelize');
   return {
+
+    defaults: {
+      globals: {
+        sequelize: true
+      },
+      __configKey__: {
+        namespaceKey: 'sails-sequelize-postgresql'
+      }
+    },
+
+    configure: function() {
+      Sequelize.cls = require('continuation-local-storage').createNamespace(sails.config[this.configKey].namespaceKey);
+    },
+
     initialize: function(next) {
       var hook = this;
       hook.initAdapters();
@@ -21,25 +36,27 @@ module.exports = function(sails) {
       migrate = sails.config.models.migrate;
       sails.log.verbose('Migration: ' + migrate);
 
-      sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
-      global['sequelize'] = sequelize;
+      sails.sequelize = sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
+      if(sails.config.globals.sequelize) {
+        sails.log.verbose("Exposing 'sequelize' globally");
+        global['sequelize'] = sequelize;
+      }
       return sails.modules.loadModels(function(err, models) {
-        var modelDef, modelName, ref;
+        var modelDef, modelName, sequelizeModel;
         if (err != null) {
           return next(err);
         }
         for (modelName in models) {
           modelDef = models[modelName];
           sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
-          global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
-          sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
-        }
-
-        for (modelName in models) {
-          modelDef = models[modelName];
-
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
+          sequelizeModel = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
+          sails.models[modelDef.globalId.toLowerCase()] = sequelizeModel;
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef, sequelizeModel);
+          if(sails.config.globals.models) {
+            sails.log.verbose("Exposing model '" + modelDef.globalId + "' globally");
+            global[modelDef.globalId] = sequelizeModel;
+          }
         }
 
         if(migrate === 'safe') {
@@ -49,7 +66,7 @@ module.exports = function(sails) {
           sequelize.sync({ force: forceSync }).then(function() {
             return next();
           });
-        }        
+        }
       });
     },
 
@@ -74,13 +91,12 @@ module.exports = function(sails) {
       }
     },
 
-    setDefaultScope: function(modelDef) {
+    setDefaultScope: function(modelDef, sequelizeModel) {
       if (modelDef.defaultScope != null) {
         sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
-        var model = global[modelDef.globalId];
         if (typeof modelDef.defaultScope === 'function') {
           var defaultScope = modelDef.defaultScope() || {};
-          model.addScope('defaultScope',defaultScope,{override: true});
+          sequelizeModel.addScope('defaultScope',defaultScope,{override: true});
         }
       }
     }

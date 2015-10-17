@@ -5,6 +5,8 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
+var Sequelize = require('Sequelize');
+
 module.exports = {
   attributes: {
   	name: {
@@ -12,7 +14,7 @@ module.exports = {
   	},
     age: {
     	type: Sequelize.INTEGER
-    }    
+    }
   },
   associations: function () {
   	User.hasMany(Image, {as: 'images', foreignKey: 'owner'});

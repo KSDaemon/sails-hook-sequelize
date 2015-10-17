@@ -5,14 +5,13 @@
 * @docs        :: http://sailsjs.org/#!documentation/models
 */
 
+var Sequelize = require('Sequelize');
+
 module.exports = {
   attributes: {
   	name: {
   		type: Sequelize.STRING
-  	},
-    role: {
-    	type: Sequelize.ENUM('USER', 'ADMIN')
-    }    
+  	}
   },
   associations: function () {
   	UserGroup.hasMany(User, {as: 'users', foreignKey: 'group'});

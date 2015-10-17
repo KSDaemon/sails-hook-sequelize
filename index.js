@@ -51,12 +51,18 @@ module.exports = function(sails) {
           sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
           sequelizeModel = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
           sails.models[modelDef.globalId.toLowerCase()] = sequelizeModel;
-          hook.setAssociation(modelDef);
-          hook.setDefaultScope(modelDef, sequelizeModel);
           if(sails.config.globals.models) {
             sails.log.verbose("Exposing model '" + modelDef.globalId + "' globally");
             global[modelDef.globalId] = sequelizeModel;
           }
+        }
+
+        // This second for loop is intended. For associations we have to setup all models first and after that setup associations
+        for (modelName in models) {
+          modelDef = models[modelName];
+          sequelizeModel = sails.models[modelDef.globalId.toLowerCase()];
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef, sequelizeModel);
         }
 
         if(migrate === 'safe') {

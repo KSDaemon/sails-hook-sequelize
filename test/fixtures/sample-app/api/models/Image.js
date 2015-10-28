@@ -5,7 +5,7 @@
  * @docs        :: http://sailsjs.org/#!documentation/models
  */
 
-var Sequelize = require('Sequelize');
+var Sequelize = require('sequelize');
 
 module.exports = {
   attributes: {

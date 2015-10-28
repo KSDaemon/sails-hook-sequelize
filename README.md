@@ -56,7 +56,7 @@ module.exports = {
       type: Sequelize.INTEGER
     }
   },
-  associate: function() {
+  associations: function() {
     user.hasMany(image, {
       foreignKey: {
         name: 'owner',

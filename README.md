@@ -37,7 +37,7 @@ somePostgresqlServer: {
     dialect: 'postgres',
     host   : 'localhost',
     port   : 5432,
-    logging: true
+    logging: console.log
   }
 }
 ```

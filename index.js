@@ -16,7 +16,7 @@ module.exports = function(sails) {
       if (connection.options == null) {
         connection.options = {};
       }
-      connection.options.logging = sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
+      connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
 
       migrate = sails.config.models.migrate;
       sails.log.verbose('Migration: ' + migrate);

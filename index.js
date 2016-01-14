@@ -25,7 +25,11 @@ module.exports = function (sails) {
       sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
       global['sequelize'] = sequelize;
 
-      return sequelize.showAllSchemas().then(function(schemaNames){
+      var schemaNames = [];
+      return sequelize.showAllSchemas().then(function (schema) {
+        schemaNames = schema;
+        return schema;
+      }).done(function () {
         sails.modules.loadModels(function (err, models) {
           var modelDef, modelName, ref;
           if (err != null) {
@@ -65,12 +69,12 @@ module.exports = function (sails) {
                 }
               }
             }
-            return sequelize.sync({force: forceSync}).then(function () {
+            sequelize.sync({force: forceSync}).then(function () {
               return next();
             });
           }
         });
-        return null;
+        return true;
       });
     },
 

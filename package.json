@@ -7,7 +7,11 @@
     "isHook": true
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/bootstrap.test.js test/unit/**/*.test.js"
+    "test": "./node_modules/mocha/bin/mocha test/bootstrap.test.js test/unit/**/*.test.js",
+    "db:start": "pg_ctl -D ./postgres -l ./logfile start",
+    "db:stop": "pg_ctl -D ./postgres -l ./logfile stop",
+    "db:status": "pg_ctl -D ./postgres -l ./logfile status",
+    "db:init": "read -s -r -p 'This will delete and create a new postgres data dir in \"./postgres\". Press any key to continue...' -n 1 dummy && rm -rf ./postgres && pg_ctl init -D ./postgres -o '--auth=trust' && pg_ctl -D ./postgres -l ./logfile start && sleep 2 && createuser postgres -w && createdb --owner=postgres sequelize"
   },
   "keywords": [
     "sails",

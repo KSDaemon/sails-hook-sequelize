@@ -21,7 +21,11 @@ module.exports = function(sails) {
       migrate = sails.config.models.migrate;
       sails.log.verbose('Migration: ' + migrate);
 
-      sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
+      if (connection.url) {
+        sequelize = new Sequelize(connection.url, connection.options);
+      } else {
+        sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
+      }
       global['sequelize'] = sequelize;
       return sails.modules.loadModels(function(err, models) {
         var modelDef, modelName, ref;

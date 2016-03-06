@@ -1,0 +1,22 @@
+{
+  "bitwise"       : true,     // Prohibit bitwise operators (&, |, ^, etc.).
+  "curly"         : true,     // Require {} for every new block or scope.
+  "eqeqeq"        : true,     // Require triple equals i.e. `===`.
+  "forin"         : true,     // Tolerate `for in` loops without `hasOwnPrototype`.
+  "newcap"        : true,     // Require capitalization of all constructor functions e.g. `new F()`.
+  "noempty"       : true,     // Prohibit use of empty blocks.
+  "camelcase"     : true,     // This options prohibits overwriting prototypes of native objects such as Array, Date and so on.
+  "quotmark"      : "single",
+  "maxlen"        : 120,
+  "maxstatements" : 30,
+  "eqnull"        : true,
+  "funcscope"     : true,
+  "node"          : true,     // Enable globals available when code is running inside of the NodeJS runtime environment.
+  "indent"        : 2,        // Specify indentation spacing
+  "esnext"        : true,     // true: Allow ES.next (ES6) syntax (ex: `const`)
+
+  "predef"        : [         // Extra globals.
+    "sails"
+  ],
+  "noyield"       : true
+}

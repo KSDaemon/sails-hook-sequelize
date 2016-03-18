@@ -3,9 +3,14 @@ module.exports = function(sails) {
   Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
   return {
     initialize: function(next) {
+      this.initAdapters();
+      this.initModels();
+
+      this.reload(next);
+    },
+
+    reload: function(next) {
       var hook = this;
-      hook.initAdapters();
-      hook.initModels();
 
       var connection, migrate, sequelize;
       sails.log.verbose('Using connection named ' + sails.config.models.connection);
@@ -42,8 +47,8 @@ module.exports = function(sails) {
         for (modelName in models) {
           modelDef = models[modelName];
 
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef);
         }
 
         if(migrate === 'safe') {
@@ -53,7 +58,7 @@ module.exports = function(sails) {
           sequelize.sync({ force: forceSync }).then(function() {
             return next();
           });
-        }        
+        }
       });
     },
 

@@ -29,9 +29,17 @@ module.exports = function (sails) {
                     return next();
                 } else {
                     var forceSync = migrate === 'drop';
-                    sequelize.sync({force: forceSync}).then(function () {
-                        return next();
-                    });
+                    if (Object.keys(global['sequelize']).length == 1) {
+                        Object.keys(global['sequelize']).forEach(function (sequelizeInstance) {
+                            sequelizeInstance.sync({force: forceSync}).then(function () {
+                                return next();
+                            });
+                        });
+                    } else {
+                        global['sequelize'].sync({force: forceSync}).then(function () {
+                            return next();
+                        });
+                    }
                 }
             });
         },

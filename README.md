@@ -73,5 +73,9 @@ module.exports = {
 };
 ```
 
+## Migrations
+If sails.config.models.migrate is set to 'umzug', the Sequelize Umzug library will be used to migrate up to the last version.
+Migration files should be in the migrations folder.
+
 #License
 [MIT](./LICENSE)

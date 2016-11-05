@@ -1,90 +1,114 @@
-module.exports = function (sails) {
-    global['Sequelize'] = require('sequelize');
-    Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
-    return {
-        initialize: function (next) {
-            this.initAdapters();
-            this.initModels();
+module.exports = function(sails) {
+  global.sequelize = require('sequelize');
+  Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
 
-            this.reload(next);
-        },
+  return {
+    initialize: function(next) {
+      this.initAdapters();
+      this.initModels();
+      this.reload(next);
+    },
 
-        reload: function (next) {
-            var hook = this;
-            var defaultConnection = sails.config.connections[sails.config.models.connection]
-                , migrate = sails.config.models.migrate
-                , sequelize;
-            /* Declare the global sequelize object */
-            global['sequelize'] = {};
+    reload: function(next) {
+      var hook = this;
+      var
+        defaultConnection = sails.config.connections[sails.config.models.connection],
+        migrate = sails.config.models.migrate;
 
-            return sails.modules.loadModels(function (err, models) {
-                if (err != null) {
-                    return next(err);
-                }
+      // Declare the global sequelize object
+      global.sequelize = {};
 
-                /*
-                 * Loop through the existing models, initialize sequelize connection for each new connection defined in the
-                 * models and then define and inject the models
-                 */
-                defineModels(models, defaultConnection);
-
-                /*
-                 * Loop through the existing models and initialize the declared associations and scopes
-                 */
-                setAssociationsAndScope(models, hook);
-
-                if (migrate === 'safe') {
-                    return next();
-                } else {
-                    var forceSync = migrate === 'drop';
-                    if (Object.keys(global['sequelize']).length == 1) {
-                        Object.keys(global['sequelize']).forEach(function (sequelizeInstance) {
-                            sequelizeInstance.sync({force: forceSync}).then(function () {
-                                return next();
-                            });
-                        });
-                    } else {
-                        global['sequelize'].sync({force: forceSync}).then(function () {
-                            return next();
-                        });
-                    }
-                }
-            });
-        },
-
-        initAdapters: function () {
-            if (sails.adapters === undefined) {
-                sails.adapters = {};
-            }
-        },
-
-        initModels: function () {
-            if (sails.models === undefined) {
-                sails.models = {};
-            }
-        },
-
-        setAssociation: function (modelDef) {
-            if (modelDef.associations != null) {
-                sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
-                if (typeof modelDef.associations === 'function') {
-                    modelDef.associations(modelDef);
-                }
-            }
-        },
-
-        setDefaultScope: function (modelDef) {
-            if (modelDef.defaultScope != null) {
-                sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
-                var model = global[modelDef.globalId];
-                if (typeof modelDef.defaultScope === 'function') {
-                    var defaultScope = modelDef.defaultScope() || {};
-                    model.addScope('defaultScope', defaultScope, {override: true});
-                }
-            }
+      return sails.modules.loadModels(function(err, models) {
+        if (err != null) {
+          return next(err);
         }
-    };
+
+        // Loop through the existing models, initialize sequelize connection for each new connection defined in the models and then define and inject the models
+        defineModels(models, defaultConnection);
+
+        // Loop through the existing models and initialize the declared associations and scopes
+        setAssociationsAndScope(models, hook);
+        if (migrate === 'safe') {
+          return next();
+        } else if (migrate === 'umzug') {
+          // If migrate is set to alter, use umzug to perform migrations.
+          // @NOTE Currently only supports migrating the default connection
+          if (Object.keys(global.sequelize).length == 1) {
+            sails.log.verbose('Skipping migrations. Currently only supports using default connection');
+            return next();
+          }
+          return migrateUsingUmzug(global.sequelize).then(next);
+        } else {
+          var forceSync = migrate === 'drop';
+          if (Object.keys(global.sequelize).length == 1) {
+            Object.keys(global.sequelize).forEach(function(sequelizeInstance) {
+              sequelizeInstance.sync({force: forceSync}).then(function() {
+                return next();
+              });
+            });
+          } else {
+            global.sequelize.sync({force: forceSync}).then(function() {
+              return next();
+            });
+          }
+        }
+      });
+    },
+
+    initAdapters: function() {
+      if (sails.adapters === undefined) {
+        sails.adapters = {};
+      }
+    },
+
+    initModels: function() {
+      if (sails.models === undefined) {
+        sails.models = {};
+      }
+    },
+
+    setAssociation: function(modelDef) {
+      if (modelDef.associations != null) {
+        sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
+        if (typeof modelDef.associations === 'function') {
+          modelDef.associations(modelDef);
+        }
+      }
+    },
+
+    setDefaultScope: function(modelDef) {
+      if (modelDef.defaultScope != null) {
+        sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
+        var model = global[modelDef.globalId];
+        if (typeof modelDef.defaultScope === 'function') {
+          var defaultScope = modelDef.defaultScope() || {};
+          model.addScope('defaultScope', defaultScope, {override: true});
+        }
+      }
+    }
+  };
 };
+
+function migrateUsingUmzug (sequelize) {
+  const Umzug = require('umzug');
+  const queryInterface = sequelize.getQueryInterface();
+
+  // Defines a new Umzug instance, that uses json as a storage.
+  // This will create a umzug.json file in the cwd(), that contains all migrations.
+  var umzug = new Umzug({
+    'storage': 'json',
+    migrations: {
+      params: [queryInterface, Sequelize]
+    }
+  });
+
+  // Migrate using umzug. .up() performs all necessary migrations.
+  return umzug.up().then(function (migrations) {
+    // "migrations" will be an Array with the names of the
+    // executed migrations.
+    sails.log.verbose('Migrated ' + migrations.join(', '));
+  });
+}
 
 /**
  * Initializes sequelize connection instances and defines the models.
@@ -96,37 +120,35 @@ module.exports = function (sails) {
  * @param {object}  defaultConnection The default connection object declared in sails.config.models
  */
 function defineModels(models, defaultConnection) {
-    var modelName, modelDef, sequelize, connectionName;
+  var modelName,
+    modelDef,
+    sequelize,
+    connectionName;
 
-    for (modelName in models) {
-        modelDef = models[modelName];
-        // Get current model connection
-        connectionName = modelDef.options.connection;
+  for (modelName in models) {
+    modelDef = models[modelName];
+    // Get current model connection
+    connectionName = modelDef.options.connection;
 
-        /*
-         * If a connection was defined in the model - init a connection with that connection name.
-         * Otherwise - with the default one
-         */
-        if (connectionName) {
-            sequelize = initIfNotExists(sails.config.connections[connectionName], connectionName);
-        } else {
-            sequelize = initIfNotExists(defaultConnection, sails.config.models.connection);
-        }
-
-        /* Define the models and add them to the global models pool */
-        sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
-        global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
-        sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
+    // If a connection was defined in the model - init a connection with that connection name. Otherwise - with the default one
+    if (connectionName) {
+      sequelize = initIfNotExists(sails.config.connections[connectionName], connectionName);
+    } else {
+      sequelize = initIfNotExists(defaultConnection, sails.config.models.connection);
     }
 
-    /*
-     * If there is only 1 connection in the global sequelize connections pool, it means there's no multiple data stores
-     * for this server, so just assign the current sequelize instance to the global sequelize variable, so that everything
-     * works as before for people's projects.
-     */
-    if (Object.keys(global['sequelize']).length == 1) {
-        global['sequelize'] = sequelize;
-    }
+    // Define the models and add them to the global models pool
+    sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
+    global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
+    sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
+  }
+
+  // If there is only 1 connection in the global sequelize connections pool, it means there's no multiple data stores
+  // for this server, so just assign the current sequelize instance to the global sequelize variable, so that everything
+  // works as before for people's projects.
+  if (Object.keys(global.sequelize).length == 1) {
+    global.sequelize = sequelize;
+  }
 }
 
 /**
@@ -139,16 +161,16 @@ function defineModels(models, defaultConnection) {
  * @returns {object}  sequelize     The sequelize connection instance
  */
 function initIfNotExists(connection, connectionName) {
-    var sequelize;
+  var sequelize;
 
-    if (!global['sequelize'][connectionName]) {
-        sequelize = initConnection(connection);
-        global['sequelize'][connectionName] = sequelize;
-    } else {
-        sequelize = global['sequelize'][connectionName];
-    }
+  if (!global.sequelize[connectionName]) {
+    sequelize = initConnection(connection);
+    global.sequelize[connectionName] = sequelize;
+  } else {
+    sequelize = global.sequelize[connectionName];
+  }
 
-    return sequelize;
+  return sequelize;
 }
 
 /**
@@ -158,24 +180,24 @@ function initIfNotExists(connection, connectionName) {
  * @returns {object}    sequelize   The sequelize connection instance
  */
 function initConnection(connection) {
-    var sequelize;
+  var sequelize;
 
-    sails.log.verbose('Using connection named ' + sails.config.models.connection);
-    if (connection == null) {
-        throw new Error('Connection \'' + sails.config.models.connection + '\' not found in config/connections');
-    }
-    if (connection.options == null) {
-        connection.options = {};
-    }
-    connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
+  sails.log.verbose('Using connection named ' + sails.config.models.connection);
+  if (connection == null) {
+    throw new Error('Connection \'' + sails.config.models.connection + '\' not found in config/connections');
+  }
+  if (connection.options == null) {
+    connection.options = {};
+  }
+  connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
 
-    if (connection.url) {
-        sequelize = new Sequelize(connection.url, connection.options);
-    } else {
-        sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
-    }
+  if (connection.url) {
+    sequelize = new Sequelize(connection.url, connection.options);
+  } else {
+    sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
+  }
 
-    return sequelize;
+  return sequelize;
 }
 
 /**
@@ -185,12 +207,13 @@ function initConnection(connection) {
  * @param {object}  hook    This hook, yeah!
  */
 function setAssociationsAndScope(models, hook) {
-    var modelName, modelDef;
+  var modelName,
+    modelDef;
 
-    for (modelName in models) {
-        modelDef = models[modelName];
+  for (modelName in models) {
+    modelDef = models[modelName];
 
-        hook.setAssociation(modelDef);
-        hook.setDefaultScope(modelDef);
-    }
+    hook.setAssociation(modelDef);
+    hook.setDefaultScope(modelDef);
+  }
 }

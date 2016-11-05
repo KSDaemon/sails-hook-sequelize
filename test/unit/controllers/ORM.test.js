@@ -1,5 +1,5 @@
-var request = require('supertest');
-var should = require('should');
+require('supertest');
+require('should');
 var fixtures = require('./../../fixtures/instances.json');
 
 describe('User model', function() {
@@ -15,7 +15,7 @@ describe('User model', function() {
     }).catch(function(err) {
       done(err);
     });
-  });  
+  });
 });
 
 describe('Image model', function() {
@@ -46,7 +46,7 @@ describe('UserGroup model', function() {
     }).catch(function(err) {
       done(err);
     });
-  });    
+  });
 });
 
 describe('Associations', function() {
@@ -55,7 +55,7 @@ describe('Associations', function() {
     var image = fixtures.image;
 
     user.addImage(image).then(function() {
-      done();      
+      done();
     }).catch(function(err) {
       done(err);
     });
@@ -80,7 +80,7 @@ describe('Associations', function() {
       done();
     }).catch(function(err) {
       done(err);
-    }); 
+    });
   });
 
   it('Image should have owner', function(done) {
@@ -108,7 +108,7 @@ describe('Associations', function() {
     var userGroup = fixtures.userGroup;
     var user = fixtures.user;
 
-    userGroup.addUser(user).then(function(userGroup) {
+    userGroup.addUser(user).then(function() {
       done();
     }).catch(function(err) {
       done(err);
@@ -142,7 +142,7 @@ describe('Default scope', function() {
     User.findOne({
       where: {
         id: fixtures.user.id
-      }      
+      }
     }).then(function(user) {
       user.should.have.property('images');
 
@@ -153,14 +153,14 @@ describe('Default scope', function() {
       done();
     }).catch(function(err) {
       done(err);
-    }); 
+    });
   });
 
   it('UserGroup shoud contain users', function(done) {
     UserGroup.findOne({
       where: {
         id: fixtures.userGroup.id
-      }      
+      }
     }).then(function(userGroup) {
       userGroup.should.have.property('users');
 
@@ -171,14 +171,14 @@ describe('Default scope', function() {
       done();
     }).catch(function(err) {
       done(err);
-    }); 
+    });
   });
 
   it('UserGroup shoud contain users images', function(done) {
     UserGroup.findOne({
       where: {
         id: fixtures.userGroup.id
-      }      
+      }
     }).then(function(userGroup) {
       userGroup.should.have.property('users');
 
@@ -194,6 +194,6 @@ describe('Default scope', function() {
       done();
     }).catch(function(err) {
       done(err);
-    }); 
+    });
   });
 });

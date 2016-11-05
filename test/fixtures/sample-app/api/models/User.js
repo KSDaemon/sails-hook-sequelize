@@ -12,7 +12,7 @@ module.exports = {
   	},
     age: {
     	type: Sequelize.INTEGER
-    }    
+    }
   },
   associations: function () {
   	User.hasMany(Image, {as: 'images', foreignKey: 'owner'});
@@ -22,7 +22,7 @@ module.exports = {
       include: [
         {model: Image, as: 'images'}
       ]
-    }
+    };
   },
   options: {
     freezeTableName: false,

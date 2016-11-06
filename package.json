@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-sequelize",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Sails.js hook to use sequelize ORM",
   "main": "index.js",
   "sails": {

@@ -97,7 +97,11 @@ function migrateUsingUmzug (sequelize) {
   // Defines a new Umzug instance, that uses json as a storage.
   // This will create a umzug.json file in the cwd(), that contains all migrations.
   var umzug = new Umzug({
-    'storage': 'json',
+    storage: 'sequelize',
+    storageOptions: {
+      sequelize: sequelize,
+      tableName: 'migrations'
+    },
     migrations: {
       params: [queryInterface, Sequelize]
     }

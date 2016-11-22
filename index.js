@@ -7,53 +7,69 @@ module.exports = function(sails) {
       hook.initAdapters();
       hook.initModels();
 
-      var connection, migrate, sequelize;
-      sails.log.verbose('Using connection named ' + sails.config.models.connection);
-      connection = sails.config.connections[sails.config.models.connection];
-      if (connection == null) {
-        throw new Error('Connection \'' + sails.config.models.connection + '\' not found in config/connections');
+      var connections = {}, migrate, sequelizes = {}, defaultConnection;
+      var defaultConnection = sails.config.models.connection;
+      sails.log.verbose('Using connection named ' + defaultConnection);
+      for (var id in sails.config.connections)
+      {
+          var connection = sails.config.connections[id];
+          if (connection == null) {
+              throw new Error('Connection \'' + id + '\' not found in config/connections');
+          }
+          if (connection.options == null) {
+              connection.options = {};
+          }
+          if (connection.options == null) {
+              connection.options = {};
+          }
+          connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
+          if (connection.url) {
+              sequelizes[id] = new Sequelize(connection.url, connection.options);
+          } else {
+              sequelizes[id] = new Sequelize(connection.database, connection.user, connection.password, connection.options);
+          }
       }
-      if (connection.options == null) {
-        connection.options = {};
-      }
-      connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
-
       migrate = sails.config.models.migrate;
       sails.log.verbose('Migration: ' + migrate);
 
-      if (connection.url) {
-        sequelize = new Sequelize(connection.url, connection.options);
-      } else {
-        sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
-      }
-      global['sequelize'] = sequelize;
+      global['sequelize']  = sequelizes[defaultConnection];
+      global['sequelizes'] = sequelizes;
       return sails.modules.loadModels(function(err, models) {
-        var modelDef, modelName, ref;
-        if (err != null) {
-          return next(err);
-        }
-        for (modelName in models) {
-          modelDef = models[modelName];
-          sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
-          global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
-          sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
-        }
+      var modelDef, modelName, ref;
+      if (err != null) {
+        return next(err);
+      }
+      for (modelName in models) {
+        modelDef = models[modelName];
+        sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
+        var connection = modelDef.connection || defaultConnection;
+        global[modelDef.globalId] = sequelizes[connection].define(modelDef.globalId, modelDef.attributes, modelDef.options);
+        sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
+      }
 
-        for (modelName in models) {
-          modelDef = models[modelName];
+      for (modelName in models) {
+        modelDef = models[modelName];
 
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
-        }
+        hook.setAssociation(modelDef);
+        hook.setDefaultScope(modelDef);
+      }
 
-        if(migrate === 'safe') {
-          return next();
-        } else {
-          var forceSync = migrate === 'drop';
-          sequelize.sync({ force: forceSync }).then(function() {
-            return next();
+      if(migrate === 'safe') {
+        return next();
+      } else {
+        var forceSync = migrate === 'drop';
+        var syncd = 0;
+        var total = 0;
+        for (var id in sequelizes){
+          total ++;
+          sequelizes[id].sync({ force: forceSync }).then(function() {
+            syncd++;
+            if (total == syncd){
+              return next();
+            }
           });
-        }        
+        }
+      }
       });
     },
 

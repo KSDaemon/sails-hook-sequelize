@@ -35,6 +35,7 @@ module.exports = function(sails) {
           // @NOTE Currently only supports migrating the default connection
           if (Object.keys(global.sequelize).length == 1) {
             sails.log.verbose('Skipping migrations. Currently only supports using default connection');
+            sails.emit('hook:orm:loaded');
             return next();
           }
           return migrateUsingUmzug(global.sequelize).then(next);
@@ -43,11 +44,13 @@ module.exports = function(sails) {
           if (Object.keys(global.sequelize).length == 1) {
             Object.keys(global.sequelize).forEach(function(sequelizeInstance) {
               sequelizeInstance.sync({force: forceSync}).then(function() {
+                sails.emit('hook:orm:loaded');
                 return next();
               });
             });
           } else {
             global.sequelize.sync({force: forceSync}).then(function() {
+              sails.emit('hook:orm:loaded');
               return next();
             });
           }

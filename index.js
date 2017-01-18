@@ -36,14 +36,15 @@ module.exports = function(sails) {
           modelDef = models[modelName];
           sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
           global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
+          _.extend(global[modelDef.globalId], modelDef);
           sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
         }
 
         for (modelName in models) {
           modelDef = models[modelName];
 
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef);
         }
 
         if(migrate === 'safe') {
@@ -53,7 +54,7 @@ module.exports = function(sails) {
           sequelize.sync({ force: forceSync }).then(function() {
             return next();
           });
-        }        
+        }
       });
     },
 

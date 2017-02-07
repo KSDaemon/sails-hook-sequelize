@@ -8,10 +8,10 @@ module.exports = function(sails) {
       hook.initModels();
 
       var connection, migrate, sequelize;
-      sails.log.verbose('Using connection named ' + sails.config.models.connection);
-      connection = sails.config.connections[sails.config.models.connection];
+      sails.log.verbose('Using datastore named ' + sails.config.models.datastore);
+      connection = sails.config.datastores[sails.config.models.datastore];
       if (connection == null) {
-        throw new Error('Connection \'' + sails.config.models.connection + '\' not found in config/connections');
+        throw new Error('Datastore \'' + sails.config.models.datastore + '\' not found in config/datastores');
       }
       if (connection.options == null) {
         connection.options = {};

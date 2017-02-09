@@ -4,6 +4,10 @@ Sails.js hook to use sequelize ORM
 [![Build Status](https://travis-ci.org/festo/sails-hook-sequelize.svg?branch=master)](https://travis-ci.org/festo/sails-hook-sequelize)
 [![npm version](https://badge.fury.io/js/sails-hook-sequelize.svg)](http://badge.fury.io/js/sails-hook-sequelize)
 
+# Update
+Sorry guys that I haven't been around to maintain this project! This project has not been actively maintained and I'm terribly sorry for that.
+
+I would love to have someone to help as active contributors to this project, if you're interested please do email me at gergely.munkacsy (at) gmail.com, and we'll work something out! Thank you so much guys!!
 
 #Install
 

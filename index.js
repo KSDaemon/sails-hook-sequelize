@@ -1,8 +1,8 @@
-module.exports = function(sails) {
+module.exports = function (sails) {
   global['Sequelize'] = require('sequelize');
   Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
   return {
-    initialize: function(next) {
+    initialize: function (next) {
       var hook = this;
       hook.initAdapters();
       hook.initModels();
@@ -10,10 +10,10 @@ module.exports = function(sails) {
       var connection, migrate, sequelize;
       sails.log.verbose('Using connection named ' + sails.config.models.connection);
       connection = sails.config.connections[sails.config.models.connection];
-      if (connection == null) {
+      if (connection === null) {
         throw new Error('Connection \'' + sails.config.models.connection + '\' not found in config/connections');
       }
-      if (connection.options == null) {
+      if (connection.options === null) {
         connection.options = {};
       }
       connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
@@ -21,13 +21,13 @@ module.exports = function(sails) {
       migrate = sails.config.models.migrate;
       sails.log.verbose('Migration: ' + migrate);
 
-      if (connection.url) {
+      if (!!connection.url) {
         sequelize = new Sequelize(connection.url, connection.options);
       } else {
         sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
       }
       global['sequelize'] = sequelize;
-      return sails.modules.loadModels(function(err, models) {
+      return sails.modules.loadModels(function (err, models) {
         var modelDef, modelName, ref;
         if (err != null) {
           return next(err);
@@ -42,34 +42,34 @@ module.exports = function(sails) {
         for (modelName in models) {
           modelDef = models[modelName];
 
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef);
         }
 
-        if(migrate === 'safe') {
+        if (migrate === 'safe') {
           return next();
         } else {
           var forceSync = migrate === 'drop';
-          sequelize.sync({ force: forceSync }).then(function() {
+          sequelize.sync({force: forceSync}).then(function () {
             return next();
           });
-        }        
+        }
       });
     },
 
-    initAdapters: function() {
-      if(sails.adapters === undefined) {
+    initAdapters: function () {
+      if (sails.adapters === undefined) {
         sails.adapters = {};
       }
     },
 
-    initModels: function() {
-      if(sails.models === undefined) {
+    initModels: function () {
+      if (sails.models === undefined) {
         sails.models = {};
       }
     },
 
-    setAssociation: function(modelDef) {
+    setAssociation: function (modelDef) {
       if (modelDef.associations != null) {
         sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
         if (typeof modelDef.associations === 'function') {
@@ -78,13 +78,13 @@ module.exports = function(sails) {
       }
     },
 
-    setDefaultScope: function(modelDef) {
+    setDefaultScope: function (modelDef) {
       if (modelDef.defaultScope != null) {
         sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
         var model = global[modelDef.globalId];
         if (typeof modelDef.defaultScope === 'function') {
           var defaultScope = modelDef.defaultScope() || {};
-          model.addScope('defaultScope',defaultScope,{override: true});
+          model.addScope('defaultScope', defaultScope, {override: true});
         }
       }
     }

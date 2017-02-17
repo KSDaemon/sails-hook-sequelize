@@ -28,6 +28,7 @@ module.exports = function(sails) {
       }
       global['sequelize'] = sequelize;
       return sails.modules.loadModels(function(err, models) {
+        models = sails.util.merge(models, sails.models || {})
         var modelDef, modelName, ref;
         if (err != null) {
           return next(err);
@@ -42,8 +43,8 @@ module.exports = function(sails) {
         for (modelName in models) {
           modelDef = models[modelName];
 
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef);
         }
 
         if(migrate === 'safe') {
@@ -53,7 +54,7 @@ module.exports = function(sails) {
           sequelize.sync({ force: forceSync }).then(function() {
             return next();
           });
-        }        
+        }
       });
     },
 

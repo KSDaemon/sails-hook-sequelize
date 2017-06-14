@@ -90,6 +90,7 @@ module.exports = {
 It work just the same, except for some minor changes:
 * Default value for `deletedAt` is Date(0)
 * When `deletedAt` is accessed, if date is Date(0), it will return `null` (custom getter)
+* Queries including the aforementioned model, will default to inner-joins **BEWARE**
 * When making queries in `paranoid: false`, a non-default scope must be used.
   This package provides the `drugged` scope that has no effect whatsoever.
   ```js

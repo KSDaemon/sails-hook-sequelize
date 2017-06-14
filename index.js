@@ -49,12 +49,12 @@ module.exports = function(sails) {
             strainedOptions.defaultScope = {
               where:{
                 deleted_at: {
-                  $ne: new Date(0),
+                  $eq: new Date(0),
                 },
               },
             };
-            strainedOptions.paranoid= true;
-            strainedOptions.deletedAt= deletedAt;
+            strainedOptions.paranoid = true;
+            strainedOptions.deletedAt = deletedAt;
             strainedOptions.scopes = strainedOptions.scopes ? strainedOptions.scopes: {};
             strainedOptions.scopes.drugged = {};
           }

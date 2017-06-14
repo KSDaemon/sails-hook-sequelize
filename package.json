@@ -1,5 +1,5 @@
 {
-  "name": "sails-hook-sequelize",
+  "name": "sails-hook-fireline",
   "version": "1.0.1",
   "description": "Sails.js hook to use sequelize ORM",
   "main": "index.js",
@@ -12,9 +12,18 @@
   "keywords": [
     "sails",
     "sequelize",
-    "orm"
+    "orm",
+    "waterline",
+    "mysql",
+    "postgresql",
+    "mssql",
+    "sqlite",
+    "sql"
   ],
-  "author": "Gergely Munkacsy",
+  "author": "Daniel González Espinoza",
+  "contributors": [
+    "Gergely Munkacsy"
+  ],
   "license": "MIT",
   "devDependencies": {
     "mocha": "^2.2.5",
@@ -26,6 +35,7 @@
   },
   "dependencies": {
     "continuation-local-storage": "^3.1.4",
+    "lodash": "^4.17.4",
     "sequelize": "^3.5.1"
   },
   "directories": {
@@ -33,10 +43,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:festo/sails-hook-sequelize.git"
+    "url": "git@github.com:malpercio/sails-hook-fireline.git"
   },
   "bugs": {
-    "url": "https://github.com/festo/sails-hook-sequelize/issues"
+    "url": "https://github.com/malpercio/sails-hook-fireline/issues"
   },
-  "homepage": "https://github.com/festo/sails-hook-sequelize"
+  "homepage": "https://github.com/malpercio/sails-hook-fireline"
 }

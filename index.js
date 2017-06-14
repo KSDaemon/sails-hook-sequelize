@@ -1,3 +1,4 @@
+const omit = require('lodash/omit');
 module.exports = function(sails) {
   global['Sequelize'] = require('sequelize');
   Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
@@ -16,16 +17,11 @@ module.exports = function(sails) {
       if (connection.options == null) {
         connection.options = {};
       }
-      connection.options.logging = connection.options.logging || sails.log.verbose; //A function that gets executed everytime Sequelize would log something.
-
+      connection.options.logging = sails.log.verbose;
       migrate = sails.config.models.migrate;
       sails.log.verbose('Migration: ' + migrate);
 
-      if (connection.url) {
-        sequelize = new Sequelize(connection.url, connection.options);
-      } else {
-        sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
-      }
+      sequelize = new Sequelize(connection.database, connection.user, connection.password, connection.options);
       global['sequelize'] = sequelize;
       return sails.modules.loadModels(function(err, models) {
         var modelDef, modelName, ref;
@@ -33,17 +29,45 @@ module.exports = function(sails) {
           return next(err);
         }
         for (modelName in models) {
+          let strainedOptions,
+            paranoidSchizophrenia = models[modelName].options.paranoidSchizophrenia;
           modelDef = models[modelName];
+          strainedOptions = omit(modelDef.options, ['paranoidSchizophrenia'])
+          if(paranoidSchizophrenia){
+            let deletedAt = strainedOptions.underscored? 'deleted_at': 'deletedAt';
+            modelDef.attributes.deleted_at = {
+              type: Sequelize.DATE,
+              allowNull: false,
+              defaultValue: new Date(0),
+              get(){
+                const date = new Date(this.getDataValue(deletedAt));
+                if(date.getTime() == 0){
+                  return null;
+                }
+              },
+            };
+            strainedOptions.defaultScope = {
+              where:{
+                deleted_at: {
+                  $ne: new Date(0),
+                },
+              },
+            };
+            strainedOptions.paranoid= true;
+            strainedOptions.deletedAt= deletedAt;
+            strainedOptions.scopes = strainedOptions.scopes ? strainedOptions.scopes: {};
+            strainedOptions.scopes.drugged = {};
+          }
           sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
-          global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, modelDef.options);
+          global[modelDef.globalId] = sequelize.define(modelDef.globalId, modelDef.attributes, strainedOptions);
           sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
         }
 
         for (modelName in models) {
           modelDef = models[modelName];
 
-          hook.setAssociation(modelDef);          
-          hook.setDefaultScope(modelDef);          
+          hook.setAssociation(modelDef);
+          hook.setDefaultScope(modelDef);
         }
 
         if(migrate === 'safe') {
@@ -53,7 +77,7 @@ module.exports = function(sails) {
           sequelize.sync({ force: forceSync }).then(function() {
             return next();
           });
-        }        
+        }
       });
     },
 
@@ -79,11 +103,10 @@ module.exports = function(sails) {
     },
 
     setDefaultScope: function(modelDef) {
+      var model = global[modelDef.globalId];
       if (modelDef.defaultScope != null) {
         sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
-        var model = global[modelDef.globalId];
         if (typeof modelDef.defaultScope === 'function') {
-          var defaultScope = modelDef.defaultScope() || {};
           model.addScope('defaultScope',defaultScope,{override: true});
         }
       }

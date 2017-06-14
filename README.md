@@ -1,26 +1,21 @@
-# sails-hook-sequelize
-Sails.js hook to use sequelize ORM
+# sails-hook-fireline
+Sails.js hook to use sequelize ORM.
+It's like Waterline but so much hotter. (Also, exclusive to SQL DB's)
 
-[![Build Status](https://travis-ci.org/festo/sails-hook-sequelize.svg?branch=master)](https://travis-ci.org/festo/sails-hook-sequelize)
-[![npm version](https://badge.fury.io/js/sails-hook-sequelize.svg)](http://badge.fury.io/js/sails-hook-sequelize)
+[![npm version](https://badge.fury.io/js/sails-hook-fireline.svg)](http://badge.fury.io/js/sails-hook-fireline)
 
-# Update
-Sorry guys that I haven't been around to maintain this project! This project has not been actively maintained and I'm terribly sorry for that.
-
-I would love to have someone to help as active contributors to this project, if you're interested please do email me at gergely.munkacsy (at) gmail.com, and we'll work something out! Thank you so much guys!!
-
-#Install
+# Install
 
 Install this hook with:
 
-```sh
-$ npm install sails-hook-sequelize --save
+```bash
+$ npm install sails-hook-fireline --save
 ```
 
 # Configuration
 
-`.sailsrc`
-````
+Modify `.sailsrc` to resemble the next file:
+```json
 {
   "hooks": {
     "orm": false,
@@ -30,7 +25,7 @@ $ npm install sails-hook-sequelize --save
 ```
 
 ## Connections
-Sequelize connection
+To make a connection, configure sails like so
 ```javascript
 somePostgresqlServer: {
   user: 'postgres',
@@ -47,8 +42,7 @@ somePostgresqlServer: {
 ```
 
 ## Models
-Sequelize model definition
-`models/user.js`
+An example of model configuration on `models/user.js`
 ```javascript
 module.exports = {
   attributes: {
@@ -77,5 +71,41 @@ module.exports = {
 };
 ```
 
-#License
+## Sequelize Extensions
+To avoid a potential loss of an unique index when using `deletedAt` (for unicity and softDelete),
+an option can be passed to the model, making its default zero, avoiding such SQL halting experience.
+
+```javascript
+module.exports = {
+  attributes: {},
+  associations: () => {},
+  options: {
+    classMethods: {},
+    instanceMethods: {},
+    hooks: {},
+    paranoidSchizophrenia: true,
+  }
+};
+```
+It work just the same, except for some minor changes:
+* Default value for `deletedAt` is Date(0)
+* When `deletedAt` is accessed, if date is Date(0), it will return `null` (custom getter)
+* When making queries in `paranoid: false`, a non-default scope must be used.
+  This package provides the `drugged` scope that has no effect whatsoever.
+  ```js
+  //All three are equivalent
+  let query = {
+    where: {},
+    paranoid: false,
+  };
+  User.scope(null)findAll(query);
+  User.scope('drugged')findAll(query);
+  User.unscoped()findAll(query);
+  ```
+
+## Special Thanks
+A big shoutout to Gergely Munkacsy for starting the base of this fork at `sails-hook-sequelize`.
+(I'm in a hurry, but I promise I will link you back)
+
+## License
 [MIT](./LICENSE)

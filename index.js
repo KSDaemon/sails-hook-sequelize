@@ -108,6 +108,7 @@ module.exports = function(sails) {
             };
           }
           modelDef.strainedOptions = omit(modelDef.options, ['paranoidSchizophrenia', 'parent', 'children'])
+          modelDef.strainedOptions.scopes = modelDef.strainedOptions.scopes ? modelDef.strainedOptions.scopes: {};
           if(paranoidSchizophrenia){
             let deletedAt = modelDef.strainedOptions.underscored? 'deleted_at': 'deletedAt';
             modelDef.attributes.deleted_at = {
@@ -121,38 +122,14 @@ module.exports = function(sails) {
                 }
               },
             };
-            modelDef.strainedOptions.defaultScope = {
+            modelDef.strainedOptions.defaultScope = modelDef.strainedOptions.defaultScope? modelDef.strainedOptions.defaultScope : {};
+            modelDef.strainedOptions.defaultScope = merge({
               where:{
                 deleted_at: {
                   $eq: new Date(0),
                 },
               },
-            };
-            modelDef.strainedOptions.paranoid = true;
-            modelDef.strainedOptions.deletedAt = deletedAt;
-            modelDef.strainedOptions.scopes = modelDef.strainedOptions.scopes ? modelDef.strainedOptions.scopes: {};
-            modelDef.strainedOptions.scopes.drugged = {};
-          }
-          if(paranoidSchizophrenia){
-            let deletedAt = modelDef.strainedOptions.underscored? 'deleted_at': 'deletedAt';
-            modelDef.attributes.deleted_at = {
-              type: Sequelize.DATE,
-              allowNull: false,
-              defaultValue: new Date(0),
-              get(){
-                const date = new Date(this.getDataValue(deletedAt));
-                if(date.getTime() == 0){
-                  return null;
-                }
-              },
-            };
-            modelDef.strainedOptions.defaultScope = {
-              where:{
-                deleted_at: {
-                  $eq: new Date(0),
-                },
-              },
-            };
+            }, modelDef.strainedOptions.defaultScope);
             modelDef.strainedOptions.paranoid = true;
             modelDef.strainedOptions.deletedAt = deletedAt;
             modelDef.strainedOptions.scopes = modelDef.strainedOptions.scopes ? modelDef.strainedOptions.scopes: {};
@@ -186,7 +163,6 @@ module.exports = function(sails) {
 
         for (modelName in models) {
           let modelDef = models[modelName];
-
           hook.setAssociation(modelDef);
           hook.setDefaultScope(modelDef);
         }

@@ -58,15 +58,24 @@ module.exports = function(sails) {
             modelDef.options.classMethods = modelDef.options.classMethods? modelDef.options.classMethods: {};
             modelDef.options.classMethods.getChild = (query) => {
               let include = [],
+                newQuery;
                 thisModel = global[modelDef.globalId];
+              query.required = false;
               for(let child of modelDef.options.children){
                 let childModel = global[models[child.toLowerCase()].globalId];
-                include.push(childModel);
+
+                newQuery = {
+                  model: childModel,
+                };
+                newQuery = merge(newQuery, query)
+                include.push(newQuery);
               }
-              query.include = union(query.include, include);
-              return thisModel.findOne(query)
+              return thisModel.findOne({where: {},include: include})
                 .then((parentJoin) => {
                   let attrib;
+                  if(!parentJoin){
+                    return parentJoin;
+                  }
                   for(attrib in parentJoin.dataValues){
                     if(parentJoin.dataValues[attrib] && endsWith(attrib,'_id')){
                       attrib = attrib.substring(0, attrib.length - 3);
@@ -81,13 +90,19 @@ module.exports = function(sails) {
             };
             modelDef.options.classMethods.getChildren = (query) => {
               let include = [],
+                newQuery;
                 thisModel = global[modelDef.globalId];
+              query.required = false;
               for(let child of modelDef.options.children){
                 let childModel = global[models[child.toLowerCase()].globalId];
-                include.push(childModel);
+
+                newQuery = {
+                  model: childModel,
+                };
+                newQuery = merge(newQuery, query)
+                include.push(newQuery);
               }
-              query.include = union(query.include, include);
-              return thisModel.findAll(query)
+              return thisModel.findAll({where: {},include: include})
                 .then((parentJoin) => {
                   let result = [];
                   for(let parent of parentJoin){

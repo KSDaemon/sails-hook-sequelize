@@ -3,6 +3,7 @@ const merge = require('lodash/merge');
 const union = require('lodash/union');
 const toLower = require('lodash/toLower');
 const endsWith = require('lodash/endsWith');
+const Promise = require('bluebird');
 
 module.exports = function(sails) {
   global['Sequelize'] = require('sequelize');
@@ -53,59 +54,50 @@ module.exports = function(sails) {
                     name: child + '_id',
                   }
                 });
+                childModel.hasOne(thisModel, {
+                  foreignKey: {
+                    name: child + '_id',
+                  }
+                });
               }
             };
             modelDef.options.classMethods = modelDef.options.classMethods? modelDef.options.classMethods: {};
             modelDef.options.classMethods.getChild = (query) => {
               let include = [],
-                newQuery;
+                searches= [];
                 thisModel = global[modelDef.globalId];
-              query.required = false;
+              query.rejectOnEmpty = true;
               for(let child of modelDef.options.children){
                 let childModel = global[models[child.toLowerCase()].globalId];
-
-                newQuery = {
-                  model: childModel,
-                };
-                newQuery = merge(newQuery, query)
-                include.push(newQuery);
+                searches.push(childModel.findOne(query));
               }
-              return thisModel.findOne({where: {},include: include})
+              return Promise.any(searches)
                 .then((parentJoin) => {
                   let attrib;
                   if(!parentJoin){
                     return parentJoin;
                   }
-                  for(attrib in parentJoin.dataValues){
-                    if(parentJoin.dataValues[attrib] && endsWith(attrib,'_id')){
-                      attrib = attrib.substring(0, attrib.length - 3);
-                      break;
-                    }
-                  }
+                  let modelName = parentJoin['$modelOptions'].name.singular;
                   return {
-                    model: attrib,
-                    value: parentJoin[attrib]
+                    model: modelName,
+                    value: parentJoin,
                   };
                 });
             };
             modelDef.options.classMethods.getChildren = (query) => {
               let include = [],
-                newQuery;
+                searches= [];
                 thisModel = global[modelDef.globalId];
-              query.required = false;
+              query.rejectOnEmpty = true;
+              query = merge(query, {include: [AuthKey]})
               for(let child of modelDef.options.children){
                 let childModel = global[models[child.toLowerCase()].globalId];
-
-                newQuery = {
-                  model: childModel,
-                };
-                newQuery = merge(newQuery, query)
-                include.push(newQuery);
+                searches.push(childModel.findAll(query).catchThrow());
               }
-              return thisModel.findAll({where: {},include: include})
+              return Promise.any(searches)
                 .then((parentJoin) => {
                   let result = [];
-                  for(let parent of parentJoin){
+                  for(let parent of parentJoin.AuthKey){
                     let attrib;
                     for(attrib in parent.dataValues){
                       if(parent.dataValues[attrib] && endsWith(attrib,'_id')){

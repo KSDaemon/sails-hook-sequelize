@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-fireline",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Sails.js hook to use sequelize ORM",
   "main": "index.js",
   "sails": {

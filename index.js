@@ -155,14 +155,14 @@ module.exports = function(sails) {
             global[modelDef.globalId].afterCreate('afterChildCreation', (child, options) => {
               let query = {
               };
-              query[modelDef.globalId.toLowerCase() + '_id'] = child.id;
+              query[modelDef.globalId + '_id'] = child.id;
               return global[modelDef.options.parent].create(query);
             });
             global[modelDef.globalId].afterDestroy('afterChildDestruction', (child, options) => {
               let query = {
                 where: {},
               };
-              query.where[modelDef.globalId.toLowerCase() + '_id'] = child.id;
+              query[modelDef.globalId + '_id'] = child.id;
               return global[modelDef.options.parent].destroy(query);
             });
           }

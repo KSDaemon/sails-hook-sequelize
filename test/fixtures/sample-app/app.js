@@ -22,7 +22,7 @@
 // no matter where we actually lift from.
 process.chdir(__dirname);
 // Ensure a "sails" can be located:
-(function() {
+(function () {
   var sails;
   try {
     sails = require('sails');
@@ -55,5 +55,5 @@ process.chdir(__dirname);
   // sails.lift(rc('sails'));
   module.exports.sails = sails.Sails;
 
-})();
+}());
 

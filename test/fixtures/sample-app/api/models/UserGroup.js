@@ -1,35 +1,35 @@
 /**
-* UserGroup.js
-*
-* @description :: TODO: You might write a short summary of how this model works and what it represents here.
-* @docs        :: http://sailsjs.org/#!documentation/models
-*/
+ * UserGroup.js
+ *
+ * @description :: TODO: You might write a short summary of how this model works and what it represents here.
+ * @docs        :: http://sailsjs.org/#!documentation/models
+ */
 
 module.exports = {
-  attributes: {
-  	name: {
-  		type: Sequelize.STRING
-  	},
+  attributes  : {
+    name: {
+      type: Sequelize.STRING
+    },
     role: {
-    	type: Sequelize.ENUM('USER', 'ADMIN')
-    }    
+      type: Sequelize.ENUM('USER', 'ADMIN')
+    }
   },
   associations: function () {
-  	UserGroup.hasMany(User, {as: 'users', foreignKey: 'group'});
+    UserGroup.hasMany(User, { as: 'users', foreignKey: 'group' });
   },
-  defaultScope: function() {
+  defaultScope: function () {
     return {
       include: [
-        {model: User, as: 'users'}
+        { model: User, as: 'users' }
       ]
     };
   },
-  options: {
+  options     : {
     freezeTableName: false,
-    tableName: 'user_group',
-    classMethods: {},
+    tableName      : 'user_group',
+    classMethods   : {},
     instanceMethods: {},
-    hooks: {}
+    hooks          : {}
   }
 };
 

@@ -1,12 +1,12 @@
 var Sails = require('./fixtures/sample-app/app').sails;
 
-describe('Sails.js Sequelize hook tests ::', function() {
+describe('Sails.js Sequelize hook tests ::', function () {
 
   // Var to hold a running sails app instance
   var sails;
 
   // Before running any tests, attempt to lift Sails
-  before(function(done) {
+  before(function (done) {
 
     // Hook will timeout in 10 seconds
     this.timeout(11000);
@@ -14,17 +14,17 @@ describe('Sails.js Sequelize hook tests ::', function() {
     // Attempt to lift sails
     Sails().lift({
       hooks: {
-        "sequelize": require('../'),
+        'sequelize': require('../'),
         // Load the hook
-        "orm": false,
-        "pubsub": false,
+        'orm': false,
+        'pubsub': false,
         // Skip grunt (unless your hook uses it)
-        "grunt": false,
+        'grunt': false,
       }
-    },function (err, _sails) {
-        if (err) return done(err);
-        sails = _sails;
-        return done(err, sails);
+    }, function (err, _sails) {
+      if (err) { return done(err); }
+      sails = _sails;
+      return done(err, sails);
     });
   });
 
@@ -34,7 +34,7 @@ describe('Sails.js Sequelize hook tests ::', function() {
   });
 
   // Test that Sails can lift with the hook in place
-  it('sails does not crash', function() {
+  it('sails does not crash', function () {
     return true;
   });
 });

@@ -7,7 +7,7 @@ const Promise = require('bluebird');
 
 module.exports = function(sails) {
   global['Sequelize'] = require('sequelize');
-  Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
+  Sequelize.useCLS(require('continuation-local-storage').createNamespace('sails-sequelize'));
   return {
     initialize: function(next) {
       var hook = this,
@@ -18,6 +18,9 @@ module.exports = function(sails) {
       var connection, migrate, sequelize;
       sails.log.verbose('Using connection named ' + sails.config.models.connection);
       connection = sails.config.connections[sails.config.models.connection];
+      connection.options = connection.options? connection.options: {};
+      connection.dialect = connection.dialect? connection.dialect: 'mysql';
+      connection.options.dialect = connection.options.dialect? connection.options.dialect: connection.dialect;
       if (connection == null) {
         throw new Error('Connection \'' + sails.config.models.connection + '\' not found in config/connections');
       }
@@ -77,40 +80,11 @@ module.exports = function(sails) {
                   if(!parentJoin){
                     return parentJoin;
                   }
-                  let modelName = parentJoin['$modelOptions'].name.singular;
+                  let modelName = parentJoin.constructor.name;
                   return {
                     model: modelName,
                     value: parentJoin,
                   };
-                });
-            };
-            modelDef.options.classMethods.getChildren = (query) => {
-              let include = [],
-                searches= [];
-                thisModel = global[modelDef.globalId];
-              query.rejectOnEmpty = true;
-              query = merge(query, {include: [AuthKey]})
-              for(let child of modelDef.options.children){
-                let childModel = global[models[child.toLowerCase()].globalId];
-                searches.push(childModel.findAll(query).catchThrow());
-              }
-              return Promise.any(searches)
-                .then((parentJoin) => {
-                  let result = [];
-                  for(let parent of parentJoin.AuthKey){
-                    let attrib;
-                    for(attrib in parent.dataValues){
-                      if(parent.dataValues[attrib] && endsWith(attrib,'_id')){
-                        attrib = attrib.substring(0, attrib.length - 3);
-                        break;
-                      }
-                    }
-                    result.push({
-                      model: attrib,
-                      value: parent[attrib]
-                    });
-                  }
-                  return result;
                 });
             };
           }
@@ -151,6 +125,12 @@ module.exports = function(sails) {
           sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
           global[modelDef.globalId] = sequelize.define(modelDef.globalId, attributes, modelDef.strainedOptions);
           sails.models[modelDef.globalId.toLowerCase()] = global[modelDef.globalId];
+          for(let method in modelDef.strainedOptions.classMethods){
+            global[modelDef.globalId][method] = modelDef.strainedOptions.classMethods[method];
+          }
+          for(let method in modelDef.strainedOptions.instanceMethods){
+            global[modelDef.globalId].prototype[method] = modelDef.strainedOptions.instanceMethods[method];
+          }
           if(modelDef.options.parent){
             global[modelDef.globalId].afterCreate('afterChildCreation', (child, options) => {
               let query = {

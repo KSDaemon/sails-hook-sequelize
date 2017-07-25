@@ -1,10 +1,11 @@
 language: node_js
 node_js:
-  - "0.12"
-addons:
-  postgresql: "9.3"
+  - "6"
+  - "7"
+services:
+  - mysql
 before_install:
-  - psql -c 'create database sequelize;' -U postgres
-  - 'npm install'
+  - mysql -e 'CREATE DATABASE fireline_test;'
+  - 'npm i'
 script:
   - 'npm test'

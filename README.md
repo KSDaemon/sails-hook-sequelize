@@ -68,11 +68,19 @@ module.exports = {
       }
     });
   },
+  defaultScope: function() {
+    return {
+      include: [
+        {model: image, as: 'images'}
+      ]
+    }
+  },
   options: {
     tableName: 'user',
     classMethods: {},
     instanceMethods: {},
-    hooks: {}
+    hooks: {},
+    scopes: {}
   }
 };
 ```

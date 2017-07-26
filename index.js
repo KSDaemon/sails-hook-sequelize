@@ -1,6 +1,6 @@
 module.exports = function (sails) {
   global.Sequelize = require('sequelize');
-  Sequelize.cls = require('continuation-local-storage').createNamespace('sails-sequelize-postgresql');
+  Sequelize.useCLS(require('continuation-local-storage').createNamespace('sails-sequelize'));
   return {
     initialize: function (next) {
       var connection, migrate, sequelize,

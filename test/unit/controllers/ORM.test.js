@@ -1,5 +1,5 @@
 // var request = require('supertest');
-// var should = require('should');
+var should = require('should');
 var fixtures = require('./../../fixtures/instances.json');
 
 describe('User model', function () {

@@ -7,7 +7,10 @@
     "isHook": true
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha test/bootstrap.test.js test/unit/**/*.test.js"
+    "lint": "node ./node_modules/.bin/eslint index.js test",
+    "lint:fix": "node ./node_modules/.bin/eslint --fix index.js test",
+    "test": "node ./node_modules/.bin/mocha test/bootstrap.test.js test/unit/**/*.test.js",
+    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/bootstrap.test.js test/unit/**/*.test.js"
   },
   "keywords": [
     "sails",
@@ -17,6 +20,8 @@
   "author": "Gergely Munkacsy",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^4.3.0",
+    "istanbul": "^0.4.5",
     "json3": "^3.3.2",
     "minimatch": "^3.0.4",
     "mocha": "^3.4.2",

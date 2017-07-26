@@ -22,11 +22,11 @@
 
 module.exports.routes = {
 
-  '/': {
-    view: 'homepage'
-  },
+    '/': {
+        view: 'homepage'
+    },
 
-  'POST /user/create': 'UserController.create',
-  'POST /image/create': 'ImageController.create'
+    'POST /user/create': 'UserController.create',
+    'POST /image/create': 'ImageController.create'
 
 };

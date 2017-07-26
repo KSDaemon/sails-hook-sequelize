@@ -1,6 +1,6 @@
 module.exports.models = {
 
-  connection: 'somePostgresqlServer',
+    connection: 'somePostgresqlServer',
 
-  migrate: 'drop'
+    migrate: 'drop'
 };

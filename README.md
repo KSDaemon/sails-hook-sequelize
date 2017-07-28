@@ -41,7 +41,6 @@ somePostgresqlServer: {
     dialect: 'postgres',
     host   : 'localhost',
     port   : 5432,
-    logging: console.log,
     namespace: 'clsEnabledIfSet' // cls support, undefined/false to disable
     loglevel: false, // debug/verbose/false - enable query logging by default at specified level or disable
   }

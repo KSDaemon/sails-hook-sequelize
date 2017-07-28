@@ -23,6 +23,24 @@ module.exports = function (sails) {
             migrate = sails.config.models.migrate;
             sails.log.verbose('Migration: ' + migrate);
 
+            //potentially enable query logging
+            if (connection.options.loglevel) {
+              if (connection.options.loglevel === 'verbose') {
+                connection.options.logging = sails.log.verbose;
+              } else if (connection.options.loglevel === 'debug') {
+                connection.options.logging = sails.log.debug;
+              }
+            } else {
+              connection.options.logging = null;
+            }
+
+            if (typeof connection.options.namespace !== 'undefined' && connection.options.namespace) {
+              sails.log.verbose("CLS is enabled in the "+connection.options.namespace+" namespace");
+              global.Sequelize.cls = require('continuation-local-storage').createNamespace(connection.options.namespace);
+            } else {
+              sails.log.verbose("CLS is disabled");
+            }
+
             if (connection.url) {
                 sequelize = new Sequelize(connection.url, connection.options);
             } else {

@@ -23,6 +23,13 @@ module.exports = function (sails) {
             migrate = sails.config.models.migrate;
             sails.log.verbose('Migration: ' + migrate);
 
+            if (typeof connection.options.namespace !== 'undefined' && connection.options.namespace !== null) {
+              sails.log.verbose("CLS is enabled in the "+connection.options.namespace+" namespace");
+              global.Sequelize.cls = require('continuation-local-storage').createNamespace(connection.options.namespace);
+            } else {
+              sails.log.verbose("CLS is disabled");
+            }
+
             if (connection.url) {
                 sequelize = new Sequelize(connection.url, connection.options);
             } else {

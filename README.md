@@ -41,7 +41,8 @@ somePostgresqlServer: {
     dialect: 'postgres',
     host   : 'localhost',
     port   : 5432,
-    logging: console.log
+    logging: console.log,
+    namespace: 'clsEnabledIfSet' //cls namspace, null or undefined to disable CLS
   }
 }
 ```

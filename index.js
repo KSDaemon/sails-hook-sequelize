@@ -34,6 +34,11 @@ module.exports = function (sails) {
                 connection.options.logging = null;
             }
 
+            //support same environment variables as waterline
+            if (!!process.env.LOG_QUERIES) {
+                connection.options.logging = sails.log.debug;
+            }
+
             if (typeof connection.options.namespace !== 'undefined' && connection.options.namespace) {
                 sails.log.verbose("CLS is enabled in the "+connection.options.namespace+" namespace");
                 global.Sequelize.cls = require('continuation-local-storage').createNamespace(connection.options.namespace);

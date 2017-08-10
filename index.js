@@ -1,6 +1,12 @@
 module.exports = function (sails) {
     global.Sequelize = require('sequelize');
-    Sequelize.useCLS(require('continuation-local-storage').createNamespace('sails-sequelize'));
+
+    var cls = sails.config.connections[sails.config.models.connection].options.clsNamespace;
+    // If custom log function is specified, use it for SQL logging or use sails logger of defined level
+    if (typeof cls === 'string' && cls !== '') {
+        Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
+    }
+
     return {
         initialize: function (next) {
             var connection, migrate, sequelize, self = this,

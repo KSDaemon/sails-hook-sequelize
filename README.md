@@ -39,7 +39,8 @@ somePostgresqlServer: {
     dialect: 'postgres',
     host   : 'localhost',
     port   : 5432,
-    logging: console.log        // or specify sails log level to use ('info', 'warn', 'verbose', etc)
+    logging: console.log,        // or specify sails log level to use ('info', 'warn', 'verbose', etc)
+    clsNamespace: 'sails-sequelize' // set this to enable CLS
   }
 }
 ```

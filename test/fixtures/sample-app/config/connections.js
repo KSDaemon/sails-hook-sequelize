@@ -8,7 +8,8 @@ module.exports.connections = {
         options: {
             dialect: 'postgres',
             host   : 'localhost',
-            port   : 5432
+            port   : 5432,
+            logging: 'verbose'
         }
     }
 };

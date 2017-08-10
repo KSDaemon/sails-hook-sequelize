@@ -39,7 +39,7 @@ somePostgresqlServer: {
     dialect: 'postgres',
     host   : 'localhost',
     port   : 5432,
-    logging: console.log
+    logging: console.log        // or specify sails log level to use ('info', 'warn', 'verbose', etc)
   }
 }
 ```

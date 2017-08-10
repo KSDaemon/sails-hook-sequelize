@@ -32,6 +32,7 @@ module.exports = function (sails) {
                     connection.options);
             }
             global.sequelize = sequelize;
+
             return sails.modules.loadModels(function (err, models) {
                 var modelDef, modelName, modelClass, cm, im;
                 if (err) {
@@ -66,9 +67,30 @@ module.exports = function (sails) {
                     return next();
                 } else {
                     var forceSync = migrate === 'drop';
-                    sequelize.sync({ force: forceSync }).then(function () {
-                        return next();
-                    });
+
+                    if (connection.dialect === 'postgres') {
+
+                        return sequelize.showAllSchemas().then(function (schemas) {
+
+                            for (modelName in models) {
+                                modelDef = models[modelName];
+                                var tableSchema = modelDef.options.schema || '';
+
+                                if (tableSchema !== '' && schemas.indexOf(tableSchema) < 0) { // there is no schema in db for model
+                                    sequelize.createSchema(tableSchema);
+                                }
+                            }
+
+                            sequelize.sync({ force: forceSync }).then(function () {
+                                return next();
+                            });
+                        });
+
+                    } else {
+                        sequelize.sync({ force: forceSync }).then(function () {
+                            return next();
+                        });
+                    }
                 }
             });
         },

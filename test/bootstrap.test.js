@@ -8,7 +8,7 @@ describe('Sails.js Sequelize hook tests ::', function () {
     // Before running any tests, attempt to lift Sails
     before(function (done) {
 
-    // Hook will timeout in 10 seconds
+        // Hook will timeout in 10 seconds
         this.timeout(11000);
 
         // Attempt to lift sails
@@ -20,7 +20,8 @@ describe('Sails.js Sequelize hook tests ::', function () {
                 'pubsub': false,
                 // Skip grunt (unless your hook uses it)
                 'grunt': false,
-            }
+            },
+            log: { level: 'verbose' }
         }, function (err, _sails) {
             if (err) { return done(err); }
             sails = _sails;

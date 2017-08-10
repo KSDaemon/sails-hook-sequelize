@@ -25,6 +25,15 @@ $ npm install sails-hook-sequelize --save
 }
 ```
 
+Also you can set some parameters in `config/sequelize.js` to override defaults.
+
+```
+module.exports.sequelize = {
+    "clsNamespace": "myAppCLSNamespace",
+    "exposeToGlobal": true
+};
+```
+
 ## Connections
 
 Sequelize connection
@@ -39,8 +48,7 @@ somePostgresqlServer: {
     dialect: 'postgres',
     host   : 'localhost',
     port   : 5432,
-    logging: console.log,        // or specify sails log level to use ('info', 'warn', 'verbose', etc)
-    clsNamespace: 'sails-sequelize' // set this to enable CLS
+    logging: console.log        // or specify sails log level to use ('info', 'warn', 'verbose', etc)
   }
 }
 ```

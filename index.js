@@ -1,13 +1,20 @@
 module.exports = function (sails) {
-    global.Sequelize = require('sequelize');
-
-    var cls = sails.config.connections[sails.config.models.connection].options.clsNamespace;
-    // If custom log function is specified, use it for SQL logging or use sails logger of defined level
-    if (typeof cls === 'string' && cls !== '') {
-        Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
-    }
+    var Sequelize = require('sequelize');
 
     return {
+        defaults: {
+            __configKey__: {
+                clsNamespace: 'sails-sequelize',
+                exposeToGlobal: true
+            }
+        },
+        configure: function () {
+            var cls = sails.config[this.configKey].clsNamespace;
+            // If custom log function is specified, use it for SQL logging or use sails logger of defined level
+            if (typeof cls === 'string' && cls !== '') {
+                Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
+            }
+        },
         initialize: function (next) {
             var connection, migrate, sequelize, self = this,
                 sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
@@ -29,9 +36,6 @@ module.exports = function (sails) {
                 connection.options.logging = sails.log[connection.options.logging];
             }
 
-            migrate = sails.config.models.migrate;
-            sails.log.verbose('Migration: ' + migrate);
-
             if (connection.url) {
                 sequelize = new Sequelize(connection.url, connection.options);
             } else {
@@ -40,7 +44,14 @@ module.exports = function (sails) {
                     connection.password,
                     connection.options);
             }
-            global.sequelize = sequelize;
+
+            if (sails.config[this.configKey].exposeToGlobal) {
+                sails.log.verbose('Exposing \'Sequelize\' globally');
+                global['Sequelize'] = Sequelize;
+            }
+
+            migrate = sails.config.models.migrate;
+            sails.log.verbose('Migration: ' + migrate);
 
             return sails.modules.loadModels(function (err, models) {
                 var modelDef, modelName, modelClass, cm, im;

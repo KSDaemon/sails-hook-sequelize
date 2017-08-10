@@ -9,8 +9,7 @@ module.exports.connections = {
             dialect: 'postgres',
             host   : 'localhost',
             port   : 5432,
-            logging: 'verbose',
-            clsNamespace: 'sails-sequelize'
+            logging: null
         }
     }
 };

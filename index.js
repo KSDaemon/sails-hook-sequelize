@@ -78,6 +78,7 @@ module.exports = function (sails) {
 
                                 if (tableSchema !== '' && schemas.indexOf(tableSchema) < 0) { // there is no schema in db for model
                                     sequelize.createSchema(tableSchema);
+                                    schemas.push(tableSchema);
                                 }
                             }
 

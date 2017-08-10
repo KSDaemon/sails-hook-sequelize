@@ -25,10 +25,11 @@ module.exports = {
         };
     },
     options     : {
-        freezeTableName: false,
-        tableName      : 'user',
-        classMethods   : {},
-        instanceMethods: {},
-        hooks          : {}
+        freezeTableName : false,
+        tableName       : 'user',
+        schema          : 'sails',
+        classMethods    : {},
+        instanceMethods : {},
+        hooks           : {}
     }
 };

@@ -15,11 +15,12 @@ module.exports = {
         Image.belongsTo(User, { foreignKey: 'owner' });
     },
     options     : {
-        freezeTableName: false,
-        tableName      : 'image',
-        classMethods   : {},
-        instanceMethods: {},
-        hooks          : {}
+        freezeTableName : false,
+        tableName       : 'image',
+        schema          : 'sails',
+        classMethods    : {},
+        instanceMethods : {},
+        hooks           : {}
     }
 };
 

@@ -16,11 +16,14 @@ module.exports = function (sails) {
             }
         },
         initialize: function (next) {
-            var connection, migrate, sequelize, self = this,
-                sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
-
             this.initAdapters();
             this.initModels();
+            this.reload(next);
+        },
+
+        reload: function (next) {
+            var connection, migrate, sequelize, self = this,
+                sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
             sails.log.verbose('Using connection named ' + sails.config.models.connection);
             connection = sails.config.connections[sails.config.models.connection];

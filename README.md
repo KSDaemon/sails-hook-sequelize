@@ -28,7 +28,7 @@ $ npm install sails-hook-sequelize --save
 Also you can set some parameters in `config/sequelize.js` to override defaults.
 
 ```
-module.exports.sequelize = {
+moduomittedts.sequelize = {
     "clsNamespace": "myAppCLSNamespace",
     "exposeToGlobal": true
 };
@@ -88,7 +88,8 @@ module.exports = {
     classMethods: {},
     instanceMethods: {},
     hooks: {},
-    scopes: {}
+    scopes: {},
+    connection: 'NotDefaultModelsConnection'    // Can be omitted, so default sails.config.models.connection will be used 
   }
 };
 ```

@@ -146,7 +146,7 @@ module.exports = function (sails) {
         },
 
         migrateSchema: function (next, connections, models) {
-            var connectionDescription, connectionName, migrate, forceSync;
+            var connectionDescription, connectionName, migrate, forceSync, syncTasks = [];
 
             migrate = sails.config.models.migrate;
             sails.log.verbose('Models migration strategy: ' + migrate);
@@ -163,7 +163,7 @@ module.exports = function (sails) {
 
                     if (connectionDescription.dialect === 'postgres') {
 
-                        return connections[connectionName].showAllSchemas().then(function (schemas) {
+                        syncTasks.push(connections[connectionName].showAllSchemas().then(function (schemas) {
                             var modelName, modelDef, tableSchema;
 
                             for (modelName in models) {
@@ -176,16 +176,18 @@ module.exports = function (sails) {
                                 }
                             }
 
-                            connections[connectionName].sync({ force: forceSync }).then(function () {
-                                return next();
-                            });
-                        });
+                            return connections[connectionName].sync({ force: forceSync });
+                        }));
 
                     } else {
-                        connections[connectionName].sync({ force: forceSync }).then(function () {
-                            return next();
-                        });
+                        syncTasks.push(connections[connectionName].sync({ force: forceSync }));
                     }
+
+                    Promise.all(syncTasks).then(function () {
+                        return next();
+                    }).catch(function (e) {
+                        return next(e);
+                    });
                 }
             }
         }

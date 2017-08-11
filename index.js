@@ -76,7 +76,10 @@ module.exports = function (sails) {
                         }
                     }
 
-                    global[modelDef.globalId] = modelClass;
+                    if (sails.config.globals.models) {
+                        sails.log.verbose('Exposing models globally');
+                        global[modelDef.globalId] = modelClass;
+                    }
                     sails.models[modelDef.globalId.toLowerCase()] = modelClass;
                 }
 

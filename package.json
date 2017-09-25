@@ -20,15 +20,15 @@
   "author": "Gergely Munkacsy",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^4.3.0",
+    "eslint": "^4.7.2",
     "istanbul": "^0.4.5",
     "json3": "^3.3.2",
     "minimatch": "^3.0.4",
-    "mocha": "^3.4.2",
+    "mocha": "^3.5.3",
     "pg": "^6.4.0",
     "pg-hstore": "^2.3.2",
     "sails": "^0.11.5",
-    "should": "^11.2.1",
+    "should": "^13.1.0",
     "supertest": "^3.0.0"
   },
   "dependencies": {

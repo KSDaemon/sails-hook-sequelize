@@ -50,15 +50,16 @@ module.exports = function (sails) {
 
         initConnections: function () {
             var connections = {}, connection, connectionName;
+            var datastore = sails.config.models.datastore || 'default';
 
-            sails.log.verbose('Using default connection named ' + sails.config.models.connection);
-            if (!sails.config.connections[sails.config.models.connection]) {
-                throw new Error('Default connection \'' + sails.config.models.connection + '\' not found in config/connections');
+            sails.log.verbose('Using default connection named ' + datastore);
+            if (!sails.config.datastores[datastore]) {
+                throw new Error('Default connection \'' + datastore + '\' not found in config/connections');
             }
 
-            for (connectionName in sails.config.connections) {
+            for (connectionName in sails.config.datastores) {
 
-                connection = sails.config.connections[connectionName];
+                connection = sails.config.datastores[connectionName];
 
                 if (!connection.options) {
                     connection.options = {};
@@ -96,7 +97,7 @@ module.exports = function (sails) {
                 modelDef = models[modelName];
                 sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
 
-                connectionName = modelDef.options.connection || sails.config.models.connection;
+                connectionName = modelDef.datastore || sails.config.models.datastore || 'default';
 
                 modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
 
@@ -156,8 +157,8 @@ module.exports = function (sails) {
             } else {
                 forceSync = migrate === 'drop';
 
-                for (connectionName in sails.config.connections) {
-                    connectionDescription = sails.config.connections[connectionName];
+                for (connectionName in sails.config.datastores) {
+                    connectionDescription = sails.config.datastores[connectionName];
 
                     sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');
 

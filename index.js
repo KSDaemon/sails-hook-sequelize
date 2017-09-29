@@ -101,11 +101,12 @@ module.exports = function (sails) {
             // 0.12: sails.config.models.connection
             // 1.00: sails.config.models.datastore
             var defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
+            
             for (modelName in models) {
                 modelDef = models[modelName];
                 sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
 
-                connectionName = modelDef.options.connection || defaultConnection;
+                connectionName = modelDef.options.connection || modelDef.datastore || defaultConnection;
 
                 modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
 

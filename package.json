@@ -40,10 +40,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:festo/sails-hook-sequelize.git"
+    "url": "git@github.com:KSDaemon/sails-hook-sequelize.git"
   },
   "bugs": {
-    "url": "https://github.com/festo/sails-hook-sequelize/issues"
+    "url": "https://github.com/KSDaemon/sails-hook-sequelize/issues"
   },
-  "homepage": "https://github.com/festo/sails-hook-sequelize"
+  "homepage": "https://github.com/KSDaemon/sails-hook-sequelize"
 }

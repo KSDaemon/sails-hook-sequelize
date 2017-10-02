@@ -51,14 +51,19 @@ module.exports = function (sails) {
         initConnections: function () {
             var connections = {}, connection, connectionName;
 
-            sails.log.verbose('Using default connection named ' + sails.config.models.connection);
-            if (!sails.config.connections[sails.config.models.connection]) {
-                throw new Error('Default connection \'' + sails.config.models.connection + '\' not found in config/connections');
+            // Try to read settings from old Sails then from the new.
+            // 0.12: sails.config.connections & sails.config.models.connection
+            // 1.00: sails.config.datastores & sails.config.models.datastore
+            var datastores = sails.config.connections || sails.config.datastores;
+            var datastoreName = sails.config.models.connection || sails.config.models.datastore || 'default';
+
+            sails.log.verbose('Using default connection named ' + datastoreName);
+            if (!datastores.hasOwnProperty(datastoreName)) {
+                throw new Error('Default connection \'' + datastoreName + '\' not found in config/connections');
             }
 
-            for (connectionName in sails.config.connections) {
-
-                connection = sails.config.connections[connectionName];
+            for (connectionName in datastores) {
+                connection = datastores[connectionName];
 
                 if (!connection.options) {
                     connection.options = {};
@@ -92,11 +97,16 @@ module.exports = function (sails) {
             var modelDef, modelName, modelClass, cm, im, connectionName,
                 sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
+            // Try to read settings from old Sails then from the new.
+            // 0.12: sails.config.models.connection
+            // 1.00: sails.config.models.datastore
+            var defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
+            
             for (modelName in models) {
                 modelDef = models[modelName];
                 sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
 
-                connectionName = modelDef.options.connection || sails.config.models.connection;
+                connectionName = modelDef.options.connection || modelDef.datastore || defaultConnection;
 
                 modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
 
@@ -147,6 +157,11 @@ module.exports = function (sails) {
 
         migrateSchema: function (next, connections, models) {
             var connectionDescription, connectionName, migrate, forceSync, syncTasks = [];
+          
+            // Try to read settings from old Sails then from the new.
+            // 0.12: sails.config.connections
+            // 1.00: sails.config.datastores
+            var datastores = sails.config.connections || sails.config.datastores;
 
             migrate = sails.config.models.migrate;
             sails.log.verbose('Models migration strategy: ' + migrate);
@@ -156,8 +171,8 @@ module.exports = function (sails) {
             } else {
                 forceSync = migrate === 'drop';
 
-                for (connectionName in sails.config.connections) {
-                    connectionDescription = sails.config.connections[connectionName];
+                for (connectionName in datastores) {
+                    connectionDescription = datastores[connectionName];
 
                     sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');
 

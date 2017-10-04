@@ -27,8 +27,9 @@ module.exports = function (sails) {
             connections = this.initConnections();
 
             if (sails.config[this.configKey].exposeToGlobal) {
-                sails.log.verbose('Exposing \'Sequelize\' globally');
+                sails.log.verbose('Exposing Sequelize and Sequelize connections globally');
                 global['Sequelize'] = Sequelize;
+                global['SequelizeConnections'] = connections;
             }
 
             return sails.modules.loadModels(function (err, models) {

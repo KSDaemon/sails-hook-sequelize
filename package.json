@@ -9,8 +9,8 @@
   "scripts": {
     "lint": "node ./node_modules/.bin/eslint index.js test",
     "lint:fix": "node ./node_modules/.bin/eslint --fix index.js test",
-    "test": "node ./node_modules/.bin/mocha test/bootstrap.test.js test/unit/**/*.test.js",
-    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/bootstrap.test.js test/unit/**/*.test.js"
+    "test": "node ./node_modules/.bin/mocha test/overall.test.js",
+    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/overall.test.js"
   },
   "keywords": [
     "sails",
@@ -20,6 +20,7 @@
   "author": "Gergely Munkacsy",
   "license": "MIT",
   "devDependencies": {
+    "decache": "^4.1.0",
     "eslint": "^4.7.2",
     "istanbul": "^0.4.5",
     "json3": "^3.3.2",

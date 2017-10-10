@@ -33,7 +33,6 @@ describe('Sails.js v0.11 Sequelize hook tests', function () {
     decache('./unit/ORM.test');
 
     after(function (done) {
-
         sails.lower(function (err) {
             if (err) {
                 return console.log('Error occurred lowering Sails app: ', err);

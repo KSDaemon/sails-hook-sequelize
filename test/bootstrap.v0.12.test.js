@@ -41,5 +41,4 @@ describe('Sails.js v0.12 Sequelize hook tests', function () {
             done();
         });
     });
-
 });

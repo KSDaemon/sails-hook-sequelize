@@ -10,7 +10,8 @@
     "lint": "node ./node_modules/.bin/eslint index.js test",
     "lint:fix": "node ./node_modules/.bin/eslint --fix index.js test",
     "test": "node ./node_modules/.bin/mocha test/overall.test.js",
-    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/overall.test.js"
+    "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/overall.test.js",
+    "pretest": "cd ./test/fixtures/v0.11-app && npm i --prefix ./ && cd - && cd ./test/fixtures/v0.12-app && npm i --prefix ./ && cd - && cd ./test/fixtures/v1.0-app && npm i --prefix ./"
   },
   "keywords": [
     "sails",

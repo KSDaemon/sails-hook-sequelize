@@ -110,16 +110,16 @@ Now is maintained by Konstantin Burkalev (@KSDaemon).
 [npm-image]: https://img.shields.io/npm/v/sails-hook-sequelize.svg?style=flat
 
 [travis-url]: https://travis-ci.org/KSDaemon/sails-hook-sequelize
-[travis-image]: https://img.shields.io/travis/KSDaemon/sails-hook-sequelize/dev.svg?style=flat
+[travis-image]: https://img.shields.io/travis/KSDaemon/sails-hook-sequelize/master.svg?style=flat
 
 [coveralls-url]: https://coveralls.io/github/KSDaemon/sails-hook-sequelize
-[coveralls-image]: https://img.shields.io/coveralls/KSDaemon/sails-hook-sequelize/dev.svg?style=flat
+[coveralls-image]: https://img.shields.io/coveralls/KSDaemon/sails-hook-sequelize/master.svg?style=flat
 
 [depstat-url]: https://david-dm.org/KSDaemon/sails-hook-sequelize
 [depstat-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize.svg?style=flat
 
 [depstat-dev-url]: https://david-dm.org/KSDaemon/sails-hook-sequelize
-[depstat-dev-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize/dev-status.svg?style=flat
+[depstat-dev-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize/master-status.svg?style=flat
 
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license-url]: http://opensource.org/licenses/MIT

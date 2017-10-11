@@ -30,7 +30,7 @@ module.exports.datastores = {
             dialect: 'postgres',
             host   : 'localhost',
             port   : 5432,
-            logging: null
+            logging: 'verbose'
         }
     }
 

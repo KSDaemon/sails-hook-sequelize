@@ -1,17 +1,15 @@
-var Sails = require('./fixtures/v1.0-app/app').sails;
-var rc = require('rc');
-var decache = require('decache');
-
 describe('Sails.js v1.0 Sequelize hook tests', function () {
 
-    // Var to hold a running sails app instance
-    var sails;
+    var Sails, rc, sails;
 
     // Before running any tests, attempt to lift Sails
     before(function (done) {
 
         // Hook will timeout in 10 seconds
         this.timeout(11000);
+
+        Sails = require('./fixtures/v1.0-app/app').sails;
+        rc = require('rc');
 
         var config = rc('sails');
         config.hooks.sequelize = require('../index');
@@ -30,7 +28,6 @@ describe('Sails.js v1.0 Sequelize hook tests', function () {
     });
 
     require('./unit/ORM.test');
-    decache('./unit/ORM.test');
 
     after(function (done) {
         sails.lower(function (err) {

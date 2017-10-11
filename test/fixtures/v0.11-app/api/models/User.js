@@ -28,8 +28,18 @@ module.exports = {
         freezeTableName : false,
         tableName       : 'user',
         schema          : 'sails',
-        classMethods    : {},
-        instanceMethods : {},
+        classMethods    : {
+            oneUniqueClassMethod: function () {
+                return 'User class method';
+            }
+        },
+        instanceMethods : {
+            toJSON: function () {
+                let obj = this.get();
+                obj.ageString = '' + obj.age + ' years';
+                return obj;
+            }
+        },
         hooks           : {}
     }
 };

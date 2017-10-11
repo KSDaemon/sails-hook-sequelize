@@ -102,7 +102,7 @@ module.exports = function (sails) {
             // 0.12: sails.config.models.connection
             // 1.00: sails.config.models.datastore
             var defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
-            
+
             for (modelName in models) {
                 modelDef = models[modelName];
                 sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
@@ -158,7 +158,7 @@ module.exports = function (sails) {
 
         migrateSchema: function (next, connections, models) {
             var connectionDescription, connectionName, migrate, forceSync, syncTasks = [];
-          
+
             // Try to read settings from old Sails then from the new.
             // 0.12: sails.config.connections
             // 1.00: sails.config.datastores

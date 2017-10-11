@@ -1,8 +1,13 @@
 # sails-hook-sequelize
 Sails.js hook to use sequelize ORM
 
-[![Build Status](https://travis-ci.org/KSDaemon/sails-hook-sequelize.svg)](https://travis-ci.org/KSDaemon/sails-hook-sequelize)
-[![npm version](https://badge.fury.io/js/sails-hook-sequelize.svg)](http://badge.fury.io/js/sails-hook-sequelize)
+[![NPM version][npm-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+[![Code coverage][coveralls-image]][coveralls-url]
+[![Dependency Status][depstat-image]][depstat-url]
+[![DevDependency Status][depstat-dev-image]][depstat-dev-url]
+[![MIT License][license-image]][license-url]
+
 
 # Installation
 
@@ -100,3 +105,21 @@ Now is maintained by Konstantin Burkalev (@KSDaemon).
 
 # License
 [MIT](./LICENSE)
+
+[npm-url]: https://www.npmjs.com/package/sails-hook-sequelize
+[npm-image]: https://img.shields.io/npm/v/sails-hook-sequelize.svg?style=flat
+
+[travis-url]: https://travis-ci.org/KSDaemon/sails-hook-sequelize
+[travis-image]: https://img.shields.io/travis/KSDaemon/sails-hook-sequelize/dev.svg?style=flat
+
+[coveralls-url]: https://coveralls.io/github/KSDaemon/sails-hook-sequelize
+[coveralls-image]: https://img.shields.io/coveralls/KSDaemon/sails-hook-sequelize/dev.svg?style=flat
+
+[depstat-url]: https://david-dm.org/KSDaemon/sails-hook-sequelize
+[depstat-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize.svg?style=flat
+
+[depstat-dev-url]: https://david-dm.org/KSDaemon/sails-hook-sequelize
+[depstat-dev-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize/dev-status.svg?style=flat
+
+[license-image]: https://img.shields.io/badge/license-MIT-blue.svg
+[license-url]: http://opensource.org/licenses/MIT

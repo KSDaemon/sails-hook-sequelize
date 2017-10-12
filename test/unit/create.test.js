@@ -30,12 +30,12 @@ describe('Image model', function () {
     });
 });
 
-describe('UserGroup model', function () {
+describe('Group model', function () {
     it('should create user group instance', function (done) {
-        UserGroup.create(fixtures.userGroup).then(function (userGroup) {
-            userGroup.should.be.type('object');
-            userGroup.should.have.property('name', fixtures.userGroup.name);
-            userGroup.should.have.property('id');
+        Group.create(fixtures.group).then(function (group) {
+            group.should.be.type('object');
+            group.should.have.property('name', fixtures.group.name);
+            group.should.have.property('id');
 
             done();
         }).catch(function (err) {

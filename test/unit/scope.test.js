@@ -17,9 +17,9 @@ describe('Default scope', function () {
         });
 
         var groupPromise = userPromise.then(function(user) {
-            return UserGroup.create(fixtures.userGroup).then(function(group) {
+            return Group.create(fixtures.group).then(function(group) {
                 return group.addUser(user).then(function() {
-                    return UserGroup.findById(group.id); 
+                    return Group.findById(group.id); 
                 });
             });
         });
@@ -61,15 +61,15 @@ describe('Default scope', function () {
         });
     });
 
-    it('UserGroup shoud contain users', function (done) {
-        UserGroup.findOne({
+    it('Group shoud contain users', function (done) {
+        Group.findOne({
             where: {
                 id: group.id
             }
-        }).then(function (userGroup) {
-            userGroup.should.have.property('users');
+        }).then(function (group) {
+            group.should.have.property('users');
 
-            var user = userGroup.users.shift();
+            var user = group.users.shift();
             user.should.be.type('object');
             user.id.should.equal(user.id);
 
@@ -79,15 +79,15 @@ describe('Default scope', function () {
         });
     });
 
-    it('UserGroup shoud contain users images', function (done) {
-        UserGroup.findOne({
+    it('Group shoud contain users images', function (done) {
+        Group.findOne({
             where: {
                 id: group.id
             }
-        }).then(function (userGroup) {
-            userGroup.should.have.property('users');
+        }).then(function (group) {
+            group.should.have.property('users');
 
-            var user = userGroup.users.shift();
+            var user = group.users.shift();
             user.should.be.type('object');
             user.id.should.equal(user.id);
             user.should.have.property('images');

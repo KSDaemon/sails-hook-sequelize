@@ -8,7 +8,7 @@ describe('Associations', function () {
     before (function (done) {
         var userPromise = User.create(fixtures.user);
         var imagePromise = Image.create(fixtures.image);
-        var groupPromise = UserGroup.create(fixtures.userGroup);
+        var groupPromise = Group.create(fixtures.group);
 
         userPromise.then(function (object) {
             user = object;
@@ -78,25 +78,25 @@ describe('Associations', function () {
     });
 
     it('shoud add user to user group', function (done) {
-        group.addUser(user).then(function (userGroup) {
+        group.addUser(user).then(function (group) {
             done();
         }).catch(function (err) {
             done(err);
         });
     });
 
-    it('UserGroup should contain user', function (done) {
-        UserGroup.findOne({
+    it('Group should contain user', function (done) {
+        Group.findOne({
             where: {
                 id: group.id
             },
             include: [
                 { model: User, as: 'users' }
             ]
-        }).then(function (userGroup) {
-            userGroup.should.have.property('users');
+        }).then(function (group) {
+            group.should.have.property('users');
 
-            var user = userGroup.users.shift();
+            var user = group.users.shift();
             user.should.be.type('object');
             user.id.should.equal(user.id);
 

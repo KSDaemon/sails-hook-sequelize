@@ -15,7 +15,7 @@ module.exports = {
         }
     },
     associations: function () {
-        Group.hasMany(User, { as: 'users', foreignKey: 'group' });
+        Group.hasMany(User, { as: 'users', foreignKey: 'groupId' });
     },
     defaultScope: function () {
         return {

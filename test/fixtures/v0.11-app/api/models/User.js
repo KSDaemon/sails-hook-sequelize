@@ -15,7 +15,7 @@ module.exports = {
         }
     },
     associations: function () {
-        User.hasMany(Image, { as: 'images', foreignKey: 'owner' });
+        User.hasMany(Image, { as: 'images', foreignKey: 'userId' });
     },
     defaultScope: function () {
         return {

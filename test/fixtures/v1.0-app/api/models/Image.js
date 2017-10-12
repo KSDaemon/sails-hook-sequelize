@@ -12,7 +12,7 @@ module.exports = {
         }
     },
     associations: function () {
-        Image.belongsTo(User, { foreignKey: 'owner' });
+        Image.belongsTo(User, { foreignKey: 'userId' });
     },
     options     : {
         freezeTableName : false,

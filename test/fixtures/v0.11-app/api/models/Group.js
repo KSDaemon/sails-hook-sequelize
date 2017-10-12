@@ -26,7 +26,7 @@ module.exports = {
     },
     options     : {
         freezeTableName : false,
-        tableName       : 'user_group',
+        tableName       : 'group',
         schema          : 'sails',
         classMethods    : {},
         instanceMethods : {},

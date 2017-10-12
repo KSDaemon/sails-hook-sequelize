@@ -27,7 +27,9 @@ describe('Sails.js v0.11 Sequelize hook tests', function () {
         return true;
     });
 
-    require('./unit/ORM.test');
+    require('./unit/create.test');
+    require('./unit/associations.test');
+    require('./unit/scope.test');
 
     after(function (done) {
         sails.lower(function (err) {

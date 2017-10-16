@@ -6,7 +6,7 @@
 	"image": {
 		"url": "http://google.com"
 	},
-	"userGroup": {
+	"group": {
 		"name": "public",
 		"role": "USER"
 	}

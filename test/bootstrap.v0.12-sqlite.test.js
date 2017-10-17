@@ -1,6 +1,6 @@
-describe('Sails.js v0.12 Sequelize hook tests with migrate "safe" option and default connection', function () {
+describe('Sails.js v0.12 Sequelize hook tests against sqlite db', () => {
 
-    var Sails, rc, sails;
+    let Sails, rc, sails;
 
     // Before running any tests, attempt to lift Sails
     before(function (done) {
@@ -11,11 +11,11 @@ describe('Sails.js v0.12 Sequelize hook tests with migrate "safe" option and def
         Sails = require('./fixtures/v0.12-sqlite3-app/app').sails;
         rc = require('rc');
 
-        var config = rc('sails');
+        const config = rc('sails');
         config.hooks.sequelize = require('../index');
 
         // Attempt to lift sails
-        Sails().lift(config, function (err, _sails) {
+        Sails().lift(config, (err, _sails) => {
             if (err) { return done(err); }
             sails = _sails;
             return done(err, sails);
@@ -23,16 +23,14 @@ describe('Sails.js v0.12 Sequelize hook tests with migrate "safe" option and def
     });
 
     // Test that Sails can lift with the hook in place
-    it('sails does not crash', function () {
-        return true;
-    });
+    it('sails does not crash', () => true);
 
     require('./unit/create.test');
     require('./unit/associations.test');
     require('./unit/scope.test');
 
-    after(function (done) {
-        sails.lower(function (err) {
+    after(done => {
+        sails.lower(err => {
             if (err) {
                 return console.log('Error occurred lowering Sails app: ', err);
             }

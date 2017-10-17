@@ -1,8 +1,8 @@
-describe('Sails.js Sequelize hook test suite', function () {
+describe('Sails.js Sequelize hook test suite', () => {
 
     const decache = require('decache');
 
-    let clean = function() {
+    let clean = () => {
         decache('./unit/create.test');
         decache('./unit/associations.test');
         decache('./unit/scope.test');

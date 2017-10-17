@@ -1,44 +1,44 @@
 // var request = require('supertest');
-var should = require('should');
-var fixtures = require('./../fixtures/instances.json');
+const should = require('should');
+const fixtures = require('./../fixtures/instances.json');
 
-describe('User model', function () {
-    it('should create user instance', function (done) {
-        User.create(fixtures.user).then(function (user) {
+describe('User model', () => {
+    it('should create user instance', done => {
+        User.create(fixtures.user).then(user => {
             user.should.be.type('object');
             user.should.have.property('name', fixtures.user.name);
             user.should.have.property('id');
 
             done();
-        }).catch(function (err) {
+        }).catch(err => {
             done(err);
         });
     });
 });
 
-describe('Image model', function () {
-    it('should create image instance', function (done) {
-        Image.create(fixtures.image).then(function (image) {
+describe('Image model', () => {
+    it('should create image instance', done => {
+        Image.create(fixtures.image).then(image => {
             image.should.be.type('object');
             image.should.have.property('url', fixtures.image.url);
             image.should.have.property('id');
 
             done();
-        }).catch(function (err) {
+        }).catch(err => {
             done(err);
         });
     });
 });
 
-describe('Group model', function () {
-    it('should create user group instance', function (done) {
-        Group.create(fixtures.group).then(function (group) {
+describe('Group model', () => {
+    it('should create user group instance', done => {
+        Group.create(fixtures.group).then(group => {
             group.should.be.type('object');
             group.should.have.property('name', fixtures.group.name);
             group.should.have.property('id');
 
             done();
-        }).catch(function (err) {
+        }).catch(err => {
             done(err);
         });
     });

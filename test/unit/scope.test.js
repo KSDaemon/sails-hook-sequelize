@@ -1,103 +1,91 @@
 // var request = require('supertest');
-var should = require('should');
-var fixtures = require('./../fixtures/instances.json');
+const should = require('should');
+const fixtures = require('./../fixtures/instances.json');
 
-describe('Default scope', function () {
-    var user, image, group;
+describe('Default scope', () => {
+    let user, image, group;
 
-    before (function (done) {
-        var imagePromise = Image.create(fixtures.image);
+    before (done => {
+        const imagePromise = Image.create(fixtures.image);
 
-        var userPromise = imagePromise.then(function(image) {
-            return User.create(fixtures.user).then(function(user) {
-                return user.addImage(image).then(function() {
-                    return User.findById(user.id);
-                });
-            });
-        });
+        const userPromise = imagePromise.then(image => User.create(fixtures.user).then(user => user.addImage(image).then(() => User.findById(user.id))));
 
-        var groupPromise = userPromise.then(function(user) {
-            return Group.create(fixtures.group).then(function(group) {
-                return group.addUser(user).then(function() {
-                    return Group.findById(group.id); 
-                });
-            });
-        });
+        const groupPromise = userPromise.then(user => Group.create(fixtures.group).then(group => group.addUser(user).then(() => Group.findById(group.id))));
 
-        userPromise.then(function (object) {
+        userPromise.then(object => {
             user = object;
         });
 
-        imagePromise.then(function (object) {
+        imagePromise.then(object => {
             image = object;
         });
 
-        groupPromise.then(function (object) {
+        groupPromise.then(object => {
             group = object;
         });
 
-        Promise.all([userPromise, imagePromise, groupPromise]).then(function() {
-            done(); 
-        }).catch(function (err) {
+        Promise.all([userPromise, imagePromise, groupPromise]).then(() => {
+            done();
+        }).catch(err => {
             done(err);
         });
     });
 
-    it('User shoud contain images', function (done) {
+    it('User shoud contain images', done => {
         User.findOne({
             where: {
                 id: user.id
             }
-        }).then(function (user) {
+        }).then(user => {
             user.should.have.property('images');
 
-            var image = user.images.shift();
+            const image = user.images.shift();
             image.should.be.type('object');
             image.should.have.property('url', image.url);
 
             done();
-        }).catch(function (err) {
+        }).catch(err => {
             done(err);
         });
     });
 
-    it('Group shoud contain users', function (done) {
+    it('Group shoud contain users', done => {
         Group.findOne({
             where: {
                 id: group.id
             }
-        }).then(function (group) {
+        }).then(group => {
             group.should.have.property('users');
 
-            var user = group.users.shift();
+            const user = group.users.shift();
             user.should.be.type('object');
             user.id.should.equal(user.id);
 
             done();
-        }).catch(function (err) {
+        }).catch(err => {
             done(err);
         });
     });
 
-    it('Group shoud contain users images', function (done) {
+    it('Group shoud contain users images', done => {
         Group.findOne({
             where: {
                 id: group.id
             }
-        }).then(function (group) {
+        }).then(group => {
             group.should.have.property('users');
 
-            var user = group.users.shift();
+            const user = group.users.shift();
             user.should.be.type('object');
             user.id.should.equal(user.id);
             user.should.have.property('images');
 
-            var image = user.images.shift();
+            const image = user.images.shift();
             image.should.be.type('object');
             image.should.have.property('url', image.url);
 
             done();
-        }).catch(function (err) {
+        }).catch(err => {
             done(err);
         });
     });

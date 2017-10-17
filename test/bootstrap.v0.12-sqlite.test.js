@@ -1,4 +1,4 @@
-describe('Sails.js v0.12 Sequelize hook tests', function () {
+describe('Sails.js v0.12 Sequelize hook tests with migrate "safe" option and default connection', function () {
 
     var Sails, rc, sails;
 
@@ -8,7 +8,7 @@ describe('Sails.js v0.12 Sequelize hook tests', function () {
         // Hook will timeout in 10 seconds
         this.timeout(11000);
 
-        Sails = require('./fixtures/v0.12-app/app').sails;
+        Sails = require('./fixtures/v0.12-sqlite3-app/app').sails;
         rc = require('rc');
 
         var config = rc('sails');

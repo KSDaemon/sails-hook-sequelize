@@ -21,8 +21,12 @@
 
 module.exports.connections = {
 
-    somePostgresqlServer: {
-        url: 'postgres://postgres@localhost:5432/sequelize'
+    default: {
+        database: 'db.sqlite',
+        options: {
+            dialect: 'sqlite',
+            storage: 'db/sequelize.sqlite'
+        }
     }
 
 };

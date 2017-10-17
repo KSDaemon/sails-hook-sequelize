@@ -52,8 +52,7 @@ module.exports = sails => {
 
         initConnections () {
             const connections = {};
-            let connection;
-            let connectionName;
+            let connection, connectionName;
 
             // Try to read settings from old Sails then from the new.
             // 0.12: sails.config.connections & sails.config.models.connection
@@ -98,12 +97,7 @@ module.exports = sails => {
         },
 
         defineModels (models, connections) {
-            let modelDef;
-            let modelName;
-            let modelClass;
-            let cm;
-            let im;
-            let connectionName;
+            let modelDef, modelName, modelClass, cm, im, connectionName;
             const sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
             // Try to read settings from old Sails then from the new.
@@ -164,10 +158,7 @@ module.exports = sails => {
         },
 
         migrateSchema (next, connections, models) {
-            let connectionDescription;
-            let connectionName;
-            let migrate;
-            let forceSync;
+            let connectionDescription, connectionName, migrate, forceSync;
             const syncTasks = [];
 
             // Try to read settings from old Sails then from the new.

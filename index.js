@@ -1,4 +1,4 @@
-module.exports = function (sails) {
+module.exports = sails => {
     var Sequelize = require('sequelize');
 
     return {
@@ -8,20 +8,20 @@ module.exports = function (sails) {
                 exposeToGlobal: true
             }
         },
-        configure: function () {
+        configure() {
             var cls = sails.config[this.configKey].clsNamespace;
             // If custom log function is specified, use it for SQL logging or use sails logger of defined level
             if (typeof cls === 'string' && cls !== '') {
                 Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
             }
         },
-        initialize: function (next) {
+        initialize(next) {
             this.initAdapters();
             this.initModels();
             this.reload(next);
         },
 
-        reload: function (next) {
+        reload(next) {
             var connections, self = this;
 
             connections = this.initConnections();
@@ -32,7 +32,7 @@ module.exports = function (sails) {
                 global['SequelizeConnections'] = connections;
             }
 
-            return sails.modules.loadModels(function (err, models) {
+            return sails.modules.loadModels((err, models) => {
 
                 if (err) {
                     return next(err);
@@ -43,13 +43,13 @@ module.exports = function (sails) {
             });
         },
 
-        initAdapters: function () {
+        initAdapters() {
             if (typeof (sails.adapters) === 'undefined') {
                 sails.adapters = {};
             }
         },
 
-        initConnections: function () {
+        initConnections() {
             var connections = {}, connection, connectionName;
 
             // Try to read settings from old Sails then from the new.
@@ -88,13 +88,13 @@ module.exports = function (sails) {
             return connections;
         },
 
-        initModels: function () {
+        initModels() {
             if (typeof (sails.models) === 'undefined') {
                 sails.models = {};
             }
         },
 
-        defineModels: function (models, connections) {
+        defineModels(models, connections) {
             var modelDef, modelName, modelClass, cm, im, connectionName,
                 sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
@@ -136,7 +136,7 @@ module.exports = function (sails) {
 
         },
 
-        setAssociation: function (modelDef) {
+        setAssociation(modelDef) {
             if (modelDef.associations !== null) {
                 sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
                 if (typeof modelDef.associations === 'function') {
@@ -145,7 +145,7 @@ module.exports = function (sails) {
             }
         },
 
-        setDefaultScope: function (modelDef) {
+        setDefaultScope(modelDef) {
             if (modelDef.defaultScope !== null) {
                 sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
                 var model = global[modelDef.globalId];
@@ -156,7 +156,7 @@ module.exports = function (sails) {
             }
         },
 
-        migrateSchema: function (next, connections, models) {
+        migrateSchema(next, connections, models) {
             var connectionDescription, connectionName, migrate, forceSync, syncTasks = [];
 
             // Try to read settings from old Sails then from the new.
@@ -179,7 +179,7 @@ module.exports = function (sails) {
 
                     if (connectionDescription.dialect === 'postgres') {
 
-                        syncTasks.push(connections[connectionName].showAllSchemas().then(function (schemas) {
+                        syncTasks.push(connections[connectionName].showAllSchemas().then(schemas => {
                             var modelName, modelDef, tableSchema;
 
                             for (modelName in models) {
@@ -199,11 +199,7 @@ module.exports = function (sails) {
                         syncTasks.push(connections[connectionName].sync({ force: forceSync }));
                     }
 
-                    Promise.all(syncTasks).then(function () {
-                        return next();
-                    }).catch(function (e) {
-                        return next(e);
-                    });
+                    Promise.all(syncTasks).then(() => next()).catch(e => next(e));
                 }
             }
         }

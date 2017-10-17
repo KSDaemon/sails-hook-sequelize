@@ -1,5 +1,5 @@
 module.exports = sails => {
-    var Sequelize = require('sequelize');
+    const Sequelize = require('sequelize');
 
     return {
         defaults: {
@@ -8,21 +8,22 @@ module.exports = sails => {
                 exposeToGlobal: true
             }
         },
-        configure() {
-            var cls = sails.config[this.configKey].clsNamespace;
+        configure () {
+            const cls = sails.config[this.configKey].clsNamespace;
             // If custom log function is specified, use it for SQL logging or use sails logger of defined level
             if (typeof cls === 'string' && cls !== '') {
                 Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
             }
         },
-        initialize(next) {
+        initialize (next) {
             this.initAdapters();
             this.initModels();
             this.reload(next);
         },
 
-        reload(next) {
-            var connections, self = this;
+        reload (next) {
+            let connections;
+            const self = this;
 
             connections = this.initConnections();
 
@@ -43,20 +44,22 @@ module.exports = sails => {
             });
         },
 
-        initAdapters() {
+        initAdapters () {
             if (typeof (sails.adapters) === 'undefined') {
                 sails.adapters = {};
             }
         },
 
-        initConnections() {
-            var connections = {}, connection, connectionName;
+        initConnections () {
+            const connections = {};
+            let connection;
+            let connectionName;
 
             // Try to read settings from old Sails then from the new.
             // 0.12: sails.config.connections & sails.config.models.connection
             // 1.00: sails.config.datastores & sails.config.models.datastore
-            var datastores = sails.config.connections || sails.config.datastores;
-            var datastoreName = sails.config.models.connection || sails.config.models.datastore || 'default';
+            const datastores = sails.config.connections || sails.config.datastores;
+            const datastoreName = sails.config.models.connection || sails.config.models.datastore || 'default';
 
             sails.log.verbose('Using default connection named ' + datastoreName);
             if (!datastores.hasOwnProperty(datastoreName)) {
@@ -88,20 +91,25 @@ module.exports = sails => {
             return connections;
         },
 
-        initModels() {
+        initModels () {
             if (typeof (sails.models) === 'undefined') {
                 sails.models = {};
             }
         },
 
-        defineModels(models, connections) {
-            var modelDef, modelName, modelClass, cm, im, connectionName,
-                sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
+        defineModels (models, connections) {
+            let modelDef;
+            let modelName;
+            let modelClass;
+            let cm;
+            let im;
+            let connectionName;
+            const sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
             // Try to read settings from old Sails then from the new.
             // 0.12: sails.config.models.connection
             // 1.00: sails.config.models.datastore
-            var defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
+            const defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
 
             for (modelName in models) {
                 modelDef = models[modelName];
@@ -133,10 +141,9 @@ module.exports = sails => {
                 this.setAssociation(modelDef);
                 this.setDefaultScope(modelDef);
             }
-
         },
 
-        setAssociation(modelDef) {
+        setAssociation (modelDef) {
             if (modelDef.associations !== null) {
                 sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
                 if (typeof modelDef.associations === 'function') {
@@ -145,24 +152,28 @@ module.exports = sails => {
             }
         },
 
-        setDefaultScope(modelDef) {
+        setDefaultScope (modelDef) {
             if (modelDef.defaultScope !== null) {
                 sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
-                var model = global[modelDef.globalId];
+                const model = global[modelDef.globalId];
                 if (typeof modelDef.defaultScope === 'function') {
-                    var defaultScope = modelDef.defaultScope() || {};
+                    const defaultScope = modelDef.defaultScope() || {};
                     model.addScope('defaultScope', defaultScope, { override: true });
                 }
             }
         },
 
-        migrateSchema(next, connections, models) {
-            var connectionDescription, connectionName, migrate, forceSync, syncTasks = [];
+        migrateSchema (next, connections, models) {
+            let connectionDescription;
+            let connectionName;
+            let migrate;
+            let forceSync;
+            const syncTasks = [];
 
             // Try to read settings from old Sails then from the new.
             // 0.12: sails.config.connections
             // 1.00: sails.config.datastores
-            var datastores = sails.config.connections || sails.config.datastores;
+            const datastores = sails.config.connections || sails.config.datastores;
 
             migrate = sails.config.models.migrate;
             sails.log.verbose('Models migration strategy: ' + migrate);
@@ -180,7 +191,7 @@ module.exports = sails => {
                     if (connectionDescription.dialect === 'postgres') {
 
                         syncTasks.push(connections[connectionName].showAllSchemas().then(schemas => {
-                            var modelName, modelDef, tableSchema;
+                            let modelName, modelDef, tableSchema;
 
                             for (modelName in models) {
                                 modelDef = models[modelName];

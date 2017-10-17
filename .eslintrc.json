@@ -45,6 +45,6 @@
         "Sequelize": true,
         "Image": true,
         "User": true,
-        "UserGroup": true
+        "Group": true
     }
 }

@@ -14,6 +14,9 @@ describe('Sails.js Sequelize hook test suite', function () {
     require('./bootstrap.v0.12.test');
     clean();
 
+    require('./bootstrap.v0.12-migrate-safe.test');
+    clean();
+
     require('./bootstrap.v1.0.test');
     clean();
 });

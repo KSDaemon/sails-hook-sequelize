@@ -133,7 +133,7 @@ module.exports = sails => {
             for (modelName in models) {
                 modelDef = models[modelName];
                 this.setAssociation(modelDef);
-                this.setDefaultScope(modelDef);
+                this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
             }
         },
 
@@ -146,10 +146,9 @@ module.exports = sails => {
             }
         },
 
-        setDefaultScope (modelDef) {
+        setDefaultScope (modelDef, model) {
             if (modelDef.defaultScope !== null) {
                 sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
-                const model = global[modelDef.globalId];
                 if (typeof modelDef.defaultScope === 'function') {
                     const defaultScope = modelDef.defaultScope() || {};
                     model.addScope('defaultScope', defaultScope, { override: true });

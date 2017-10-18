@@ -11,9 +11,13 @@ describe('Sails.js Sequelize hook test suite', () => {
     require('./bootstrap.v0.11.test');
     clean();
 
-    require('./bootstrap.v0.12-db-schemes.test');
+    require('./bootstrap.v0.12-many-schemes.test');
     clean();
 
+    require('./bootstrap.v0.12-create-db-schemes.test');
+    clean();
+
+    // this test should run after bootstrap.v0.12-create-db-schemes because it doesn't create tables
     require('./bootstrap.v0.12-migrate-safe.test');
     clean();
 

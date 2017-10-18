@@ -9,13 +9,13 @@ describe('Sails.js v0.12 Sequelize hook tests with db schemes (psql)', () => {
         this.timeout(11000);
 
         const Sequelize = require('sequelize'),
-            connInfo = require('./fixtures/v0.12-db-schemes-app/config/connections').connections.somePostgresqlServer;
+            connInfo = require('./fixtures/v0.12-many-schemes-app/config/connections').connections.somePostgresqlServer;
 
         let connection = new Sequelize(connInfo.url, connInfo.options);
 
         // Drop schemas if exists
-        connection.query('DROP SCHEMA IF EXISTS sails CASCADE;').then(() => {
-            Sails = require('./fixtures/v0.12-db-schemes-app/app').sails;
+        connection.query('DROP SCHEMA IF EXISTS sails, sails_img CASCADE;').then(() => {
+            Sails = require('./fixtures/v0.12-many-schemes-app/app').sails;
             rc = require('rc');
 
             const config = rc('sails');

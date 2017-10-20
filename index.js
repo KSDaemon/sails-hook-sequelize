@@ -68,6 +68,11 @@ module.exports = sails => {
             for (connectionName in datastores) {
                 connection = datastores[connectionName];
 
+                // Skip waterline connections
+                if (connection.adapter) {
+                    continue;
+                }
+
                 if (!connection.options) {
                     connection.options = {};
                 }
@@ -107,10 +112,14 @@ module.exports = sails => {
 
             for (modelName in models) {
                 modelDef = models[modelName];
+
+                // Skip models without options provided (possible Waterline models)
+                if (!modelDef.options) {
+                    continue;
+                }
+
                 sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
-
-                connectionName = modelDef.options.connection || modelDef.datastore || defaultConnection;
-
+                connectionName = modelDef.connection || modelDef.datastore || defaultConnection;
                 modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
 
                 if (sequelizeMajVersion >= 4) {
@@ -132,6 +141,12 @@ module.exports = sails => {
 
             for (modelName in models) {
                 modelDef = models[modelName];
+
+                // Skip models without options provided (possible Waterline models)
+                if (!modelDef.options) {
+                    continue;
+                }
+
                 this.setAssociation(modelDef);
                 this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
             }
@@ -176,6 +191,11 @@ module.exports = sails => {
                 for (connectionName in datastores) {
                     connectionDescription = datastores[connectionName];
 
+                    // Skip waterline connections
+                    if (connectionDescription.adapter) {
+                        continue;
+                    }
+
                     sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');
 
                     if (connectionDescription.dialect === 'postgres') {
@@ -199,9 +219,10 @@ module.exports = sails => {
                     } else {
                         syncTasks.push(connections[connectionName].sync({ force: forceSync }));
                     }
-
-                    Promise.all(syncTasks).then(() => next()).catch(e => next(e));
                 }
+
+                Promise.all(syncTasks).then(() => next()).catch(e => next(e));
+
             }
         }
     };

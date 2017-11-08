@@ -127,13 +127,13 @@ module.exports = sails => {
                     sails.log.verbose('Exposing model \'' + modelDef.globalId + '\' globally');
                     global[modelDef.globalId] = modelClass;
                 }
-                sails.models[modelDef.globalId.toLowerCase()] = modelClass;
+                sails.models[modelDef.globalId] = modelClass;
             }
 
             for (modelName in models) {
                 modelDef = models[modelName];
                 this.setAssociation(modelDef);
-                this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
+                this.setDefaultScope(modelDef, sails.models[modelDef.globalId]);
             }
         },
 

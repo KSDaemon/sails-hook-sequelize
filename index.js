@@ -5,7 +5,8 @@ module.exports = sails => {
         defaults: {
             __configKey__: {
                 clsNamespace: 'sails-sequelize',
-                exposeToGlobal: true
+                exposeToGlobal: true,
+                enableSsaclAttributeRoles: false
             }
         },
         configure () {
@@ -77,14 +78,31 @@ module.exports = sails => {
                     connection.options.logging = sails.log[connection.options.logging];
                 }
 
+                let sequelize;
                 if (connection.url) {
-                    connections[connectionName] = new Sequelize(connection.url, connection.options);
+                    sequelize = new Sequelize(connection.url, connection.options);
                 } else {
-                    connections[connectionName] = new Sequelize(connection.database,
+                    sequelize = new Sequelize(connection.database,
                         connection.user,
                         connection.password,
                         connection.options);
                 }
+
+                if (sails.config[this.configKey].enableSsaclAttributeRoles) {
+                    try {
+                        // try to import ssacl-attribute-roles
+                        const ssaclAttributeRoles = require('ssacl-attribute-roles');
+                        ssaclAttributeRoles(sequelize);
+                    } catch (err) {
+                        if (err.code === 'MODULE_NOT_FOUND') {
+                            console.error('Please install "ssacl-attribute-roles" manually.')
+                        }
+                        // propagate error handling to sails
+                        throw err;
+                    }
+                }
+
+                connections[connectionName] = sequelize;
             }
 
             return connections;
@@ -127,13 +145,13 @@ module.exports = sails => {
                     sails.log.verbose('Exposing model \'' + modelDef.globalId + '\' globally');
                     global[modelDef.globalId] = modelClass;
                 }
-                sails.models[modelDef.globalId.toLowerCase()] = modelClass;
+                sails.models[modelDef.globalId] = modelClass;
             }
 
             for (modelName in models) {
                 modelDef = models[modelName];
                 this.setAssociation(modelDef);
-                this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
+                this.setDefaultScope(modelDef, sails.models[modelDef.globalId]);
             }
         },
 

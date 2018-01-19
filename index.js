@@ -199,9 +199,9 @@ module.exports = sails => {
                     } else {
                         syncTasks.push(connections[connectionName].sync({ force: forceSync }));
                     }
-
-                    Promise.all(syncTasks).then(() => next()).catch(e => next(e));
                 }
+
+                Promise.all(syncTasks).then(() => next()).catch(e => next(e));
             }
         }
     };

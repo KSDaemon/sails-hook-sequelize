@@ -157,7 +157,7 @@ module.exports = sails => {
         },
 
         migrateSchema (next, connections, models) {
-            let connectionDescription, connectionName, migrate, forceSync;
+            let connectionDescription, connectionName, migrate, forceSyncFlag, alterFlag;
             const syncTasks = [];
 
             // Try to read settings from old Sails then from the new.
@@ -171,7 +171,19 @@ module.exports = sails => {
             if (migrate === 'safe') {
                 return next();
             } else {
-                forceSync = migrate === 'drop';
+                switch (migrate) {
+                    case 'drop':
+                        forceSyncFlag = true;
+                        alterFlag = false;
+                        break;
+                    case 'alter':
+                        forceSyncFlag = false;
+                        alterFlag = true;
+                        break;
+                    default:
+                        forceSyncFlag = false;
+                        alterFlag = false;
+                }
 
                 for (connectionName in datastores) {
                     connectionDescription = datastores[connectionName];
@@ -193,11 +205,11 @@ module.exports = sails => {
                                 }
                             }
 
-                            return connections[connectionName].sync({ force: forceSync });
+                            return connections[connectionName].sync({ force: forceSyncFlag, alter: alterFlag });
                         }));
 
                     } else {
-                        syncTasks.push(connections[connectionName].sync({ force: forceSync }));
+                        syncTasks.push(connections[connectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
                     }
                 }
 

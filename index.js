@@ -1,6 +1,9 @@
 module.exports = sails => {
     const Sequelize = require('sequelize');
 
+    // keep a ref to the original sails model loader function
+    const originalLoadModels = sails.modules.loadModels;
+
     return {
         defaults: {
             __configKey__: {
@@ -14,11 +17,52 @@ module.exports = sails => {
             if (typeof cls === 'string' && cls !== '') {
                 Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
             }
+
+            if (sails.config[this.configKey].exposeToGlobal) {
+                sails.log.verbose('Exposing Sequelize globally');
+                global['Sequelize'] = Sequelize;
+            }
+
+            // Override sails internal loadModels function
+            // needs to be done in configure()
+            sails.modules.loadModels = function load (cb) {
+
+                // call the original sails loadModels function so we have access to it's returned models
+                originalLoadModels((err, modelDefs) => {
+                    // modelDefs = all the model files from models directory - sails does this
+                    // now modify / return own models for sails to boot
+                    const models = {};
+
+                    sails.log.verbose('Detecting Waterline models');
+                    Object.entries(modelDefs).forEach((entry) => {
+                        const [key, model] = entry;
+
+                        if (typeof (model.options) === 'undefined' || typeof (model.options.tableName) === 'undefined') {
+                            sails.log.verbose('Loading Waterline model \'' + model.globalId + '\'');
+                            models[key] = model;
+                        }
+                    });
+
+                    // return the models that the sails orm hook will bootstrap
+                    cb(err, models);
+                });
+            };
         },
         initialize (next) {
-            this.initAdapters();
-            this.initModels();
-            this.reload(next);
+
+            if (sails.config.hooks.orm === false) {
+                this.initAdapters();
+                this.initModels();
+                this.reload(next);
+            } else {
+                sails.on('hook:orm:loaded', () => {
+
+                    this.initAdapters();
+                    this.initModels();
+                    this.reload(next);
+
+                });
+            }
         },
 
         reload (next) {
@@ -28,12 +72,11 @@ module.exports = sails => {
             connections = this.initConnections();
 
             if (sails.config[this.configKey].exposeToGlobal) {
-                sails.log.verbose('Exposing Sequelize and Sequelize connections globally');
-                global['Sequelize'] = Sequelize;
+                sails.log.verbose('Exposing Sequelize connections globally');
                 global['SequelizeConnections'] = connections;
             }
 
-            return sails.modules.loadModels((err, models) => {
+            return originalLoadModels((err, models) => {
 
                 if (err) {
                     return next(err);
@@ -118,7 +161,7 @@ module.exports = sails => {
                     continue;
                 }
 
-                sails.log.verbose('Loading model \'' + modelDef.globalId + '\'');
+                sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\'');
                 connectionName = modelDef.connection || modelDef.datastore || defaultConnection;
                 modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
 
@@ -172,7 +215,7 @@ module.exports = sails => {
         },
 
         migrateSchema (next, connections, models) {
-            let connectionDescription, connectionName, migrate, forceSync;
+            let connectionDescription, connectionName, migrate, forceSyncFlag, alterFlag;
             const syncTasks = [];
 
             // Try to read settings from old Sails then from the new.
@@ -186,7 +229,19 @@ module.exports = sails => {
             if (migrate === 'safe') {
                 return next();
             } else {
-                forceSync = migrate === 'drop';
+                switch (migrate) {
+                    case 'drop':
+                        forceSyncFlag = true;
+                        alterFlag = false;
+                        break;
+                    case 'alter':
+                        forceSyncFlag = false;
+                        alterFlag = true;
+                        break;
+                    default:
+                        forceSyncFlag = false;
+                        alterFlag = false;
+                }
 
                 for (connectionName in datastores) {
                     connectionDescription = datastores[connectionName];
@@ -213,11 +268,11 @@ module.exports = sails => {
                                 }
                             }
 
-                            return connections[connectionName].sync({ force: forceSync });
+                            return connections[connectionName].sync({ force: forceSyncFlag, alter: alterFlag });
                         }));
 
                     } else {
-                        syncTasks.push(connections[connectionName].sync({ force: forceSync }));
+                        syncTasks.push(connections[connectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
                     }
                 }
 

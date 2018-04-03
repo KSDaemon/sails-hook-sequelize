@@ -1,6 +1,6 @@
 {
   "name": "sails-hook-sequelize",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Sails.js hook to use sequelize ORM",
   "main": "index.js",
   "sails": {
@@ -20,6 +20,10 @@
     "orm"
   ],
   "author": "Gergely Munkacsy",
+  "contributors": [
+    "Konstantin Burkalev",
+    "Dmitry Demenchuk"
+  ],
   "license": "MIT",
   "devDependencies": {
     "coveralls": "^3.0.0",

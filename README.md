@@ -94,13 +94,13 @@ module.exports = {
     instanceMethods: {},
     hooks: {},
     scopes: {},
-    connection: 'NotDefaultModelsConnection'    // Can be omitted, so default sails.config.models.connection will be used 
   }
+  connection: 'NotDefaultModelsConnection'    // Can be omitted, so default sails.config.models.connection will be used
 };
 ```
 
 # Contributors
-This project was originally created by Gergely Munkácsy (@festo). 
+This project was originally created by Gergely Munkácsy (@festo).
 Now is maintained by Konstantin Burkalev (@KSDaemon).
 
 # License

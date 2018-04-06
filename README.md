@@ -94,7 +94,7 @@ module.exports = {
     instanceMethods: {},
     hooks: {},
     scopes: {},
-  }
+  },
   connection: 'NotDefaultModelsConnection'    // Can be omitted, so default sails.config.models.connection will be used
 };
 ```

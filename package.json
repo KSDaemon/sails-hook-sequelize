@@ -12,7 +12,7 @@
     "test": "node ./node_modules/.bin/mocha test/overall.test.js",
     "cover": "node ./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha test/overall.test.js",
     "pretest": "cd ./test/fixtures/v0.11-app && npm i --prefix ./ && cd - && cd ./test/fixtures/v0.12-sequelize-waterline-app && npm i --prefix ./ && cd - && cd ./test/fixtures/v1.0-app && npm i --prefix ./ && cd -",
-    "posttest": "git checkout -- test/fixtures/v0.12-sqlite3-app/db/sequelize.sqlite"
+    "posttest": "git checkout -- ./test/fixtures/v0.12-sqlite3-app/db/sequelize.sqlite && git checkout -- ./test/fixtures/v0.12-sequelize-waterline-app/db/sequelize.sqlite"
   },
   "keywords": [
     "sails",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "coveralls": "^3.0.0",
     "decache": "^4.4.0",
-    "eslint": "^4.19.0",
+    "eslint": "^4.19.1",
     "istanbul": "^0.4.5",
     "json3": "^3.3.2",
     "minimatch": "^3.0.4",
@@ -39,7 +39,7 @@
     "sails-hook-orm": "^1.0.9",
     "sails-memory": "^0.10.7",
     "should": "^13.2.1",
-    "sqlite3": "^3.1.13",
+    "sqlite3": "^4.0.0",
     "supertest": "^3.0.0"
   },
   "dependencies": {

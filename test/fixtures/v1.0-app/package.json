@@ -5,16 +5,16 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
-    "async": "2.0.1",
-    "grunt": "1.0.1",
-    "lodash": "3.10.1",
-    "sails": "^1.0.0-46",
-    "sails-hook-grunt": "^2.2.1",
+    "async": "^2.6.0",
+    "grunt": "^1.0.2",
+    "lodash": "^4.17.10",
+    "sails": "^1.0.1",
+    "sails-hook-grunt": "^3.1.0",
     "sails-hook-orm": "^2.0.0-22",
-    "sails-hook-sockets": "^1.5.1"
+    "sails-hook-sockets": "^1.5.2"
   },
   "devDependencies": {
-    "eslint": "3.5.0"
+    "eslint": "^4.19.1"
   },
   "scripts": {
     "start": "NODE_ENV=production node app.js",

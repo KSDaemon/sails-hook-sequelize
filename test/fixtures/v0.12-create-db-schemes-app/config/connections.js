@@ -25,6 +25,7 @@ module.exports.connections = {
         url: 'postgres://postgres@localhost:5432/sequelize',
         options: {
             dialect: 'postgres',
+            logging: false
         },
         dialect: 'postgres'
     }

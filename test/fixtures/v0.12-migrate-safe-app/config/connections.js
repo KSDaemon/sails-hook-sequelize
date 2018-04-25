@@ -22,7 +22,10 @@
 module.exports.connections = {
 
     default: {
-        url: 'postgres://postgres@localhost:5432/sequelize'
+        url: 'postgres://postgres@localhost:5432/sequelize',
+        options: {
+            logging: false
+        }
     }
 
 };

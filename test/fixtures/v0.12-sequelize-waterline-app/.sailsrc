@@ -11,6 +11,6 @@
     "i18n": false
   },
   "log": {
-    "level": "verbose"
+    "level": "info"
   }
 }

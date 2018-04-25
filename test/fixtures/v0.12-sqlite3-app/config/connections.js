@@ -25,7 +25,8 @@ module.exports.connections = {
         database: 'db.sqlite',
         options: {
             dialect: 'sqlite',
-            storage: 'db/sequelize.sqlite'
+            storage: 'db/sequelize.sqlite',
+            logging: false
         }
     }
 

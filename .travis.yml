@@ -8,7 +8,7 @@ before_install:
   - npm install -g npm@5.3
 script:
   - 'npm test'
-after_script: "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --report lcovonly test/overall.test.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+after_script: "./node_modules/istanbul/lib/cli.js cover ./node_modules/mocha/bin/_mocha --exit --report lcovonly test/overall.test.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
 notifications:
   email:
     recipients:

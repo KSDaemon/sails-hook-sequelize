@@ -83,7 +83,8 @@ module.exports = sails => {
                 }
 
                 // merge sails hook's model before init all models.
-                models = sails.util.merge(models, sails.models || {});
+                const merge = sails.util ? sails.util.merge : _.merge;
+                models = merge(models, sails.models || {});
 
                 self.defineModels(models, connections);
                 self.migrateSchema(next, connections, models);

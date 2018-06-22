@@ -88,7 +88,7 @@ module.exports = {
       ]
     }
   },
-  options: {
+  options: {                                  // Options must exists (even if empty) in order to consider this model a Sequelize model
     tableName: 'user',
     classMethods: {},
     instanceMethods: {},

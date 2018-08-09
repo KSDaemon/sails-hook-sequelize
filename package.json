@@ -26,9 +26,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "coveralls": "^3.0.1",
+    "coveralls": "^3.0.2",
     "decache": "^4.4.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.3.0",
     "istanbul": "^0.4.5",
     "json3": "^3.3.2",
     "minimatch": "^3.0.4",
@@ -38,13 +38,13 @@
     "sails": "^0.12.14",
     "sails-hook-orm": "^1.0.9",
     "sails-memory": "^0.10.7",
-    "should": "^13.2.1",
-    "sqlite3": "^4.0.0",
+    "should": "^13.2.3",
+    "sqlite3": "^4.0.2",
     "supertest": "^3.1.0"
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",
-    "sequelize": "^4.37.10"
+    "sequelize": "^4.38.0"
   },
   "directories": {
     "test": "test"

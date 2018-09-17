@@ -28,7 +28,7 @@
   "devDependencies": {
     "coveralls": "^3.0.2",
     "decache": "^4.4.0",
-    "eslint": "^5.3.0",
+    "eslint": "^5.6.0",
     "istanbul": "^0.4.5",
     "json3": "^3.3.2",
     "minimatch": "^3.0.4",
@@ -40,11 +40,11 @@
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
     "sqlite3": "^4.0.2",
-    "supertest": "^3.1.0"
+    "supertest": "^3.3.0"
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",
-    "sequelize": "^4.38.0"
+    "sequelize": "^4.38.1"
   },
   "directories": {
     "test": "test"

@@ -111,8 +111,8 @@ module.exports = sails => {
             for (connectionName in datastores) {
                 connection = datastores[connectionName];
 
-                // Skip waterline connections
-                if (connection.adapter) {
+                // Skip waterline and non sequelize connections
+                if (connection.adapter || !connection.dialect) {
                     continue;
                 }
 

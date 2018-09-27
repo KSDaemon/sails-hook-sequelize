@@ -108,7 +108,7 @@ module.exports = sails => {
                 throw new Error('Default connection \'' + datastoreName + '\' not found in config/connections');
             }
 
-            for (connectionName in datastores) {
+            for (var connectionName = 0;  connectionName < datastores.length; connectionName++) {
                 connection = datastores[connectionName];
 
                 // Skip waterline and non sequelize connections

@@ -167,7 +167,7 @@ module.exports = sails => {
                         continue;
                     }
 
-                    if (sails.config[this.configKey].shareModelsAmongConnections) {
+                    if (sails.config[this.configKey].shareModelsAmongConnections && !modelDef.connection) {
                         modelDef.connection = connection;
                         sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\' for connection \'' + connection +'\'');
                     } else {
@@ -175,6 +175,9 @@ module.exports = sails => {
                     }
 
                     connectionName = modelDef.connection || modelDef.datastore || defaultConnection;
+                    if (connectionName !== connection) {
+                        continue;
+                    }
                     modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
 
                     if (sequelizeMajVersion >= 4) {

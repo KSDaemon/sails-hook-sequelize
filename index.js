@@ -175,9 +175,7 @@ module.exports = sails => {
                     }
 
                     if (sails.config[this.configKey].shareModelsAmongConnections && !modelDef.connection) {
-                        if (connection !== defaultConnection) {
-                            modelDef.connection = connection;
-                        }
+                        modelDef.connection = connection;
 
                         sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\' for connection \'' + connection +'\'');
                     } else {

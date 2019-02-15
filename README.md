@@ -99,6 +99,15 @@ module.exports = {
 };
 ```
 
+## Sharing models among connections
+
+If you set the sequelize configuration flag `shareModelsAmongConnections` to true, any sails model definitions
+which do not explicitly specify a connection will be used with all configured datasources.
+
+If sails models are configured to be exposed globally, you may access the Model for a particular connection
+by via `Model.connection_name` or `Model['connection_name']`. Just `Model` will access the model for the default
+datasource normally.
+
 # Contributors
 This project was originally created by Gergely Munkácsy (@festo).
 Now is maintained by Konstantin Burkalev (@KSDaemon).

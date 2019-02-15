@@ -153,11 +153,17 @@ module.exports = sails => {
             // 1.00: sails.config.models.datastore
             const defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
 
-            const globalSailsModelsMissingDefaultDefinitions= {};
-
             const initialModels = Object.assign({}, models);
 
-            for (connection in connections) {
+            Object.keys(connections).sort((connA, connB) => {
+                if (connA === defaultConnection) {
+                    return -1;
+                } else if (connB === defaultConnection) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }).forEach(function(connection){
                 const connectionModels = {};
 
                 for (modelName in initialModels) {
@@ -199,22 +205,13 @@ module.exports = sails => {
                         if (sails.config[this.configKey].shareModelsAmongConnections) {
                             if (connection === defaultConnection) {
                                 global[modelDef.globalId] = modelClass;
-                                for (waitingConnection in globalSailsModelsMissingDefaultDefinitions[modelDef.globalId]) {
-                                    global[modelDef.globalId][waitingConnection] = globalSailsModelsMissingDefaultDefinitions[modelDef.globalId][waitingConnection];
-                                }
+                                global[modelDef.globalId][defaultConnection] = modelClass;
                             } else {
-                                if (global[modelDef.globalId] === undefined) {
-                                    globalSailsModelsMissingDefaultDefinitions[modelDef.globalId] = {
-                                        connection,
-                                        modelDef
-                                    }
-                                } else {
-                                    if (global[modelDef.globalId][connection]) {
-                                        throw new Error(`Attaching a namespaced model for connection ${connection} would overwrite an existing property on ${modelDef.globalId}. For safety, this is not allowed.\n` +
+                                if (global[modelDef.globalId][connection]) {
+                                    throw new Error(`Attaching a namespaced model for connection ${connection} would overwrite an existing property on ${modelDef.globalId}. For safety, this is not allowed.\n` +
                                         'To avoid this, please rename your connection.');
-                                    }
-                                    global[modelDef.globalId][connection] = modelClass;
                                 }
+                                global[modelDef.globalId][connection] = modelClass;
                             }
                         } else {
                             global[modelDef.globalId] = modelClass;
@@ -234,7 +231,7 @@ module.exports = sails => {
                     this.setAssociation(modelDef);
                     this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
                 }
-            }
+            });
         },
 
         setAssociation (modelDef) {
@@ -292,7 +289,7 @@ module.exports = sails => {
 
                         // Skip waterline connections
                         if (connectionDescription.adapter) {
-                            continue;
+                            return;
                         }
 
                         sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');

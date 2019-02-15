@@ -1,0 +1,16 @@
+{
+  "generators": {
+    "modules": {}
+  },
+  "hooks": {
+    "blueprints": false,
+    "grunt": false,
+    "sockets": false,
+    "pubsub": false,
+    "orm": false,
+    "i18n": false
+  },
+  "log": {
+    "level": "info"
+  }
+}

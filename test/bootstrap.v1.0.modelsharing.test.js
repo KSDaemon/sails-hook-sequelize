@@ -1,4 +1,4 @@
-describe('Sails.js v0.12 Sequelize hook tests alongside with Waterline ORM', () => {
+describe('Sails.js v1.0 Sequelize hook shared models tests', () => {
 
     let Sails, rc, sails;
 
@@ -8,7 +8,7 @@ describe('Sails.js v0.12 Sequelize hook tests alongside with Waterline ORM', () 
         // Hook will timeout in 10 seconds
         this.timeout(11000);
 
-        Sails = require('./fixtures/v0.12-sequelize-waterline-app/app').sails;
+        Sails = require('./fixtures/v1.0-app-multitenant/app').sails;
         rc = require('rc');
 
         const config = rc('sails');
@@ -25,9 +25,10 @@ describe('Sails.js v0.12 Sequelize hook tests alongside with Waterline ORM', () 
     // Test that Sails can lift with the hook in place
     it('sails does not crash', () => true);
 
-    // require('./unit/create.test');
-    // require('./unit/associations.test');
-    // require('./unit/scope.test');
+    require('./unit/create.test');
+    require('./unit/associations.test');
+    require('./unit/scope.test');
+    require('./unit/model-sharing.test.js');
 
     after(done => {
         sails.lower(err => {

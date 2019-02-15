@@ -244,36 +244,39 @@ module.exports = sails => {
                 }
 
                 for (connectionName in datastores) {
-                    connectionDescription = datastores[connectionName];
+                    (function(){
+                        var _connectionName = connectionName;
+                        connectionDescription = datastores[_connectionName];
 
-                    // Skip waterline connections
-                    if (connectionDescription.adapter) {
-                        continue;
-                    }
+                        // Skip waterline connections
+                        if (connectionDescription.adapter) {
+                            continue;
+                        }
 
-                    sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');
+                        sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');
 
-                    if (connectionDescription.dialect === 'postgres') {
+                        if (connectionDescription.dialect === 'postgres') {
 
-                        syncTasks.push(connections[connectionName].showAllSchemas().then(schemas => {
-                            let modelName, modelDef, tableSchema;
+                            syncTasks.push(connections[_connectionName].showAllSchemas().then(schemas => {
+                                let modelName, modelDef, tableSchema;
 
-                            for (modelName in models) {
-                                modelDef = models[modelName];
-                                tableSchema = modelDef.options.schema || '';
+                                for (modelName in models) {
+                                    modelDef = models[modelName];
+                                    tableSchema = modelDef.options.schema || '';
 
-                                if (tableSchema !== '' && schemas.indexOf(tableSchema) < 0) { // there is no schema in db for model
-                                    connections[connectionName].createSchema(tableSchema);
-                                    schemas.push(tableSchema);
+                                    if (tableSchema !== '' && schemas.indexOf(tableSchema) < 0) { // there is no schema in db for model
+                                        connections[_connectionName].createSchema(tableSchema);
+                                        schemas.push(tableSchema);
+                                    }
                                 }
-                            }
 
-                            return connections[connectionName].sync({ force: forceSyncFlag, alter: alterFlag });
-                        }));
+                                return connections[_connectionName].sync({ force: forceSyncFlag, alter: alterFlag });
+                            }));
 
-                    } else {
-                        syncTasks.push(connections[connectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
-                    }
+                        } else {
+                            syncTasks.push(connections[_connectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
+                        }
+                    })();
                 }
 
                 Promise.all(syncTasks).then(() => next()).catch(e => next(e));

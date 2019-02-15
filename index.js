@@ -231,10 +231,11 @@ module.exports = sails => {
                     this.setAssociation(modelDef);
                     this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
                 }
-            });
+            }.bind(this));
         },
 
         setAssociation (modelDef) {
+
             if (modelDef.associations !== null) {
                 sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
                 if (typeof modelDef.associations === 'function') {

@@ -209,6 +209,10 @@ module.exports = sails => {
                                         modelDef
                                     }
                                 } else {
+                                    if (global[modelDef.globalId][connection]) {
+                                        throw new Error(`Attaching a namespaced model for connection ${connection} would overwrite an existing property on ${modelDef.globalId}. For safety, this is not allowed.\n` +
+                                        'To avoid this, please rename your connection.');
+                                    }
                                     global[modelDef.globalId][connection] = modelClass;
                                 }
                             }

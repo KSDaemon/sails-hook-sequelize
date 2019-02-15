@@ -245,8 +245,8 @@ module.exports = sails => {
 
                 for (connectionName in datastores) {
                     (function(){
-                        var _connectionName = connectionName;
-                        connectionDescription = datastores[_connectionName];
+                        var syncConnectionName = connectionName;
+                        connectionDescription = datastores[syncConnectionName];
 
                         // Skip waterline connections
                         if (connectionDescription.adapter) {
@@ -257,7 +257,7 @@ module.exports = sails => {
 
                         if (connectionDescription.dialect === 'postgres') {
 
-                            syncTasks.push(connections[_connectionName].showAllSchemas().then(schemas => {
+                            syncTasks.push(connections[syncConnectionName].showAllSchemas().then(schemas => {
                                 let modelName, modelDef, tableSchema;
 
                                 for (modelName in models) {
@@ -265,16 +265,16 @@ module.exports = sails => {
                                     tableSchema = modelDef.options.schema || '';
 
                                     if (tableSchema !== '' && schemas.indexOf(tableSchema) < 0) { // there is no schema in db for model
-                                        connections[_connectionName].createSchema(tableSchema);
+                                        connections[syncConnectionName].createSchema(tableSchema);
                                         schemas.push(tableSchema);
                                     }
                                 }
 
-                                return connections[_connectionName].sync({ force: forceSyncFlag, alter: alterFlag });
+                                return connections[syncConnectionName].sync({ force: forceSyncFlag, alter: alterFlag });
                             }));
 
                         } else {
-                            syncTasks.push(connections[_connectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
+                            syncTasks.push(connections[syncConnectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
                         }
                     })();
                 }

@@ -250,7 +250,7 @@ module.exports = sails => {
 
                         // Skip waterline connections
                         if (connectionDescription.adapter) {
-                            continue;
+                            return;
                         }
 
                         sails.log.verbose('Migrating schema in \'' + connectionName + '\' connection');

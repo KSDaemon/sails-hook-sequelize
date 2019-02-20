@@ -8,7 +8,7 @@ describe('Sails.js v1.0 Sequelize hook shared models tests', () => {
         // Hook will timeout in 10 seconds
         this.timeout(11000);
 
-        Sails = require('./fixtures/v1.0-app-multitenant/app').sails;
+        Sails = require('./fixtures/v1.0-app-shared-models/app').sails;
         rc = require('rc');
 
         const config = rc('sails');

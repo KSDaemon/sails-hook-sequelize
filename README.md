@@ -106,6 +106,10 @@ Now is maintained by Konstantin Burkalev (@KSDaemon).
 # License
 [MIT](./LICENSE)
 
+Thanks JetBrains for support! Best IDEs for every language!
+
+[![JetBrains](https://user-images.githubusercontent.com/458096/54276284-086cad00-459e-11e9-9684-47536d9520c4.png)](https://www.jetbrains.com/?from=wampy.js)
+
 [npm-url]: https://www.npmjs.com/package/sails-hook-sequelize
 [npm-image]: https://img.shields.io/npm/v/sails-hook-sequelize.svg?style=flat
 

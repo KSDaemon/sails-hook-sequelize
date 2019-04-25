@@ -26,9 +26,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "coveralls": "^3.0.2",
-    "decache": "^4.4.0",
-    "eslint": "^5.6.0",
+    "coveralls": "^3.0.3",
+    "decache": "^4.5.1",
+    "eslint": "^5.15.3",
     "istanbul": "^0.4.5",
     "json3": "^3.3.2",
     "minimatch": "^3.0.4",
@@ -39,7 +39,7 @@
     "sails-hook-orm": "^1.0.9",
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
-    "sqlite3": "^4.0.2",
+    "sqlite3": "^4.0.6",
     "supertest": "^3.3.0"
   },
   "dependencies": {

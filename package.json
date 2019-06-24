@@ -26,21 +26,21 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "coveralls": "^3.0.3",
+    "coveralls": "^3.0.4",
     "decache": "^4.5.1",
-    "eslint": "^5.15.3",
+    "eslint": "^6.0.0",
     "istanbul": "^0.4.5",
-    "json3": "^3.3.2",
+    "json3": "^3.3.3",
     "minimatch": "^3.0.4",
-    "mocha": "^5.2.0",
+    "mocha": "^6.1.4",
     "pg": "^6.4.0",
-    "pg-hstore": "^2.3.2",
+    "pg-hstore": "^2.3.3",
     "sails": "^0.12.14",
     "sails-hook-orm": "^1.0.9",
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
-    "sqlite3": "^4.0.6",
-    "supertest": "^3.3.0"
+    "sqlite3": "^4.0.9",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",

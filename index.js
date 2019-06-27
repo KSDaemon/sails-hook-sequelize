@@ -138,14 +138,14 @@ module.exports = sails => {
             return connections;
         },
 
-        initModels () {
+        initModels() {
             if (typeof (sails.models) === 'undefined') {
                 sails.models = {};
             }
         },
 
         defineModels (models, connections) {
-            let modelDef, modelName, modelClass, cm, im, connectionName;
+            let modelDef, modelName, modelClass, cm, im, connectionName, connection;
             const sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
             // Try to read settings from old Sails then from the new.
@@ -153,49 +153,87 @@ module.exports = sails => {
             // 1.00: sails.config.models.datastore
             const defaultConnection = sails.config.models.connection || sails.config.models.datastore || 'default';
 
-            for (modelName in models) {
-                modelDef = models[modelName];
+            const initialModels = Object.assign({}, models);
 
-                // Skip models without options provided (possible Waterline models)
-                if (!modelDef.options) {
-                    continue;
+            Object.keys(connections).sort((connA, connB) => {
+                if (connA === defaultConnection) {
+                    return -1;
+                } else if (connB === defaultConnection) {
+                    return 1;
+                } else {
+                    return 0;
                 }
+            }).forEach(function(connection){
+                const connectionModels = {};
 
-                sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\'');
-                connectionName = modelDef.connection || modelDef.datastore || defaultConnection;
-                modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
+                for (modelName in initialModels) {
+                    modelDef = Object.assign({}, initialModels[modelName]);
 
-                if (sequelizeMajVersion >= 4) {
-                    for (cm in modelDef.options.classMethods) {
-                        modelClass[cm] = modelDef.options.classMethods[cm];
+                    // Skip models without options provided (possible Waterline models)
+                    if (!modelDef.options) {
+                        continue;
                     }
 
-                    for (im in modelDef.options.instanceMethods) {
-                        modelClass.prototype[im] = modelDef.options.instanceMethods[im];
+                    if (sails.config[this.configKey].shareModelsAmongConnections && !modelDef.connection) {
+                        modelDef.connection = connection;
+
+                        sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\' for connection \'' + connection +'\'');
+                    } else {
+                        sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\'');
                     }
+
+                    connectionName = modelDef.connection || modelDef.datastore || defaultConnection;
+                    if (connectionName !== connection) {
+                        continue;
+                    }
+                    modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
+
+                    if (sequelizeMajVersion >= 4) {
+                        for (cm in modelDef.options.classMethods) {
+                            modelClass[cm] = modelDef.options.classMethods[cm];
+                        }
+
+                        for (im in modelDef.options.instanceMethods) {
+                            modelClass.prototype[im] = modelDef.options.instanceMethods[im];
+                        }
+                    }
+
+                    if (sails.config.globals.models) {
+                        sails.log.verbose('Exposing model \'' + modelDef.globalId + '\' globally');
+                        if (sails.config[this.configKey].shareModelsAmongConnections) {
+                            if (connection === defaultConnection) {
+                                global[modelDef.globalId] = modelClass;
+                                global[modelDef.globalId][defaultConnection] = modelClass;
+                            } else {
+                                if (global[modelDef.globalId][connection]) {
+                                    throw new Error(`Attaching a namespaced model for connection ${connection} would overwrite an existing property on ${modelDef.globalId}. For safety, this is not allowed.\n` +
+                                        'To avoid this, please rename your connection.');
+                                }
+                                global[modelDef.globalId][connection] = modelClass;
+                            }
+                        } else {
+                            global[modelDef.globalId] = modelClass;
+                        }
+                    }
+                    sails.models[modelDef.globalId.toLowerCase()] = modelClass;
+                    connectionModels[modelName] = modelDef;
                 }
+                for (modelName in connectionModels) {
+                    modelDef = connectionModels[modelName];
 
-                if (sails.config.globals.models) {
-                    sails.log.verbose('Exposing model \'' + modelDef.globalId + '\' globally');
-                    global[modelDef.globalId] = modelClass;
+                    // Skip models without options provided (possible Waterline models)
+                    if (!modelDef.options) {
+                        continue;
+                    }
+
+                    this.setAssociation(modelDef);
+                    this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
                 }
-                sails.models[modelDef.globalId.toLowerCase()] = modelClass;
-            }
-
-            for (modelName in models) {
-                modelDef = models[modelName];
-
-                // Skip models without options provided (possible Waterline models)
-                if (!modelDef.options) {
-                    continue;
-                }
-
-                this.setAssociation(modelDef);
-                this.setDefaultScope(modelDef, sails.models[modelDef.globalId.toLowerCase()]);
-            }
+            }.bind(this));
         },
 
         setAssociation (modelDef) {
+
             if (modelDef.associations !== null) {
                 sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
                 if (typeof modelDef.associations === 'function') {

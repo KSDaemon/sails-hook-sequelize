@@ -5,6 +5,7 @@ addons:
   postgresql: "9.6"
 before_install:
   - psql -c 'create database sequelize;' -U postgres
+  - psql -c 'create database sequelize2;' -U postgres
   - npm install -g npm@5.3
 script:
   - 'npm test'

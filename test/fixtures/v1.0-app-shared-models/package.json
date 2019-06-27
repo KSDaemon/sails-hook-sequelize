@@ -1,0 +1,36 @@
+{
+  "name": "app",
+  "private": true,
+  "version": "0.0.0",
+  "description": "a Sails application",
+  "keywords": [],
+  "dependencies": {
+    "async": "^2.6.0",
+    "grunt": "^1.0.2",
+    "lodash": "^4.17.10",
+    "sails": "^1.0.1",
+    "sails-hook-grunt": "^3.1.0",
+    "sails-hook-orm": "^2.0.0-22",
+    "sails-hook-sockets": "^1.5.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1"
+  },
+  "scripts": {
+    "start": "NODE_ENV=production node app.js",
+    "test": "npm run lint && npm run custom-tests && echo 'Done.'",
+    "lint": "node ./node_modules/eslint/bin/eslint . --max-warnings=0 && echo '✔  Your code looks good.'",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo",
+    "debug": "node debug app.js"
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kostik/app.git"
+  },
+  "author": "kostik",
+  "license": "",
+  "engines": {
+    "node": "8"
+  }
+}

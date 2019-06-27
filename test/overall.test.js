@@ -32,4 +32,7 @@ describe('Sails.js Sequelize hook test suite', () => {
 
     require('./bootstrap.v1.0.test');
     clean();
+
+    require('./bootstrap.v1.0.modelsharing.test');
+    clean();
 });

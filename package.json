@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",
-    "sequelize": "^4.39.0"
+    "sequelize": "^5.9.4"
   },
   "directories": {
     "test": "test"

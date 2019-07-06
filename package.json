@@ -40,7 +40,7 @@
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
     "sqlite3": "^4.0.9",
-    "supertest": "^3.3.0"
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",

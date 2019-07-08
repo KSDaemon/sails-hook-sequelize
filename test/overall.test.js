@@ -11,25 +11,29 @@ describe('Sails.js Sequelize hook test suite', () => {
     require('./bootstrap.v0.11.test');
     clean();
 
-    require('./bootstrap.v0.12-many-schemes.test');
+    require('./bootstrap.v0.12.test');
     clean();
 
-    require('./bootstrap.v0.12-create-db-schemes.test');
+    require('./bootstrap.v1.x.test');
     clean();
 
-    // this test should run after bootstrap.v0.12-create-db-schemes because it doesn't create tables
-    require('./bootstrap.v0.12-migrate-safe.test');
+    require('./bootstrap.v1.x-many-schemes.test');
     clean();
 
-    require('./bootstrap.v0.12-sqlite.test');
+    require('./bootstrap.v1.x-create-db-schemes.test');
     clean();
 
-    require('./bootstrap.v0.12-no-conn.test');
+    // this test should run after bootstrap.v1.x-create-db-schemes because it doesn't create tables
+    require('./bootstrap.v1.x-migrate-safe.test');
     clean();
 
-    require('./bootstrap.v0.12-sequelize-waterline.test');
+    require('./bootstrap.v1.x-sqlite.test');
     clean();
 
-    require('./bootstrap.v1.0.test');
+    require('./bootstrap.v1.x-no-conn.test');
     clean();
+
+    require('./bootstrap.v1.x-sequelize-waterline.test');
+    clean();
+
 });

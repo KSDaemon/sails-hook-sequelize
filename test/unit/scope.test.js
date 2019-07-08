@@ -8,9 +8,9 @@ describe('Default scope', () => {
     before (done => {
         const imagePromise = Image.create(fixtures.image);
 
-        const userPromise = imagePromise.then(image => User.create(fixtures.user).then(user => user.addImage(image).then(() => User.findById(user.id))));
+        const userPromise = imagePromise.then(image => User.create(fixtures.user).then(user => user.addImage(image).then(() => User.findByPk(user.id))));
 
-        const groupPromise = userPromise.then(user => Group.create(fixtures.group).then(group => group.addUser(user).then(() => Group.findById(group.id))));
+        const groupPromise = userPromise.then(user => Group.create(fixtures.group).then(group => group.addUser(user).then(() => Group.findByPk(group.id))));
 
         userPromise.then(object => {
             user = object;

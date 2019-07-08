@@ -284,7 +284,7 @@ module.exports = sails => {
                         } else {
                             syncTasks.push(connections[syncConnectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
                         }
-                    })();
+                    }());
                 }
 
                 Promise.all(syncTasks).then(() => next()).catch(e => next(e));

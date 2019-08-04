@@ -33,7 +33,7 @@
     "json3": "^3.3.3",
     "minimatch": "^3.0.4",
     "mocha": "^5.2.0",
-    "pg": "^7.11.0",
+    "pg": "^7.12.0",
     "pg-hstore": "^2.3.3",
     "sails": "^1.2.3",
     "sails-hook-orm": "^2.1.1",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",
-    "sequelize": "^5.10.2"
+    "sequelize": "^5.12.3"
   },
   "directories": {
     "test": "test"

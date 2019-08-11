@@ -9,7 +9,7 @@ module.exports = sails => {
             __configKey__: {
                 clsNamespace: 'sails-sequelize',
                 exposeToGlobal: true,
-                mergeConfigModel: false
+                modelDefaults: false
             }
         },
         configure () {
@@ -83,9 +83,9 @@ module.exports = sails => {
                     return next(err);
                 }
 
-                if(sails.config[this.configKey].mergeConfigModel) {
+                if(sails.config[this.configKey].modelDefaults) {
                     Object.values(models).forEach((model) => {
-                        model = _.defaultsDeep(model, sails.config.models);
+                        model = _.defaultsDeep(model, sails.config[this.configKey].modelDefaults);
                     });
                 }
 

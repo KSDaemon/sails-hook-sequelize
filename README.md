@@ -35,7 +35,8 @@ Also you can set some parameters in `config/sequelize.js` to override defaults.
 ```
 module.exports.sequelize = {
     "clsNamespace": "myAppCLSNamespace",
-    "exposeToGlobal": true
+    "exposeToGlobal": true,
+    "mergeConfigModel": false //Restores default funcationality where you can have global / default values for all attributes
 };
 ```
 

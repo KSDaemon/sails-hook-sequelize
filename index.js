@@ -8,7 +8,8 @@ module.exports = sails => {
         defaults: {
             __configKey__: {
                 clsNamespace: 'sails-sequelize',
-                exposeToGlobal: true
+                exposeToGlobal: true,
+                mergeConfigModel: false
             }
         },
         configure () {
@@ -80,6 +81,12 @@ module.exports = sails => {
 
                 if (err) {
                     return next(err);
+                }
+
+                if(sails.config[this.configKey].mergeConfigModel) {
+                    Object.values(models).forEach((model) => {
+                        model = _.defaultsDeep(model, sails.config.models);
+                    });
                 }
 
                 self.defineModels(models, connections);

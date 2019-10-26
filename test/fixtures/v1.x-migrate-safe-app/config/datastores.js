@@ -25,7 +25,8 @@ module.exports.datastores = {
         url: 'postgres://postgres@localhost:5432/sequelize',
         options: {
             logging: false
-        }
+        },
+        dialect: 'postgres'
     }
 
 };

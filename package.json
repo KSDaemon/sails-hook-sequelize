@@ -28,9 +28,9 @@
   ],
   "license": "MIT",
   "devDependencies": {
-    "coveralls": "^3.0.6",
+    "coveralls": "^3.0.7",
     "decache": "^4.5.1",
-    "eslint": "^6.5.1",
+    "eslint": "^6.6.0",
     "istanbul": "^0.4.5",
     "json3": "^3.3.3",
     "minimatch": "^3.0.4",
@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",
-    "sequelize": "^5.19.1"
+    "sequelize": "^5.21.1"
   },
   "directories": {
     "test": "test"

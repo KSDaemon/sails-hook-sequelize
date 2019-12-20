@@ -32,6 +32,9 @@ module.exports.datastores = {
             port   : 5432,
             logging: 'verbose'
         }
-    }
+    },
 
+    memory: {
+        adapter: 'sails-memory'
+    }
 };

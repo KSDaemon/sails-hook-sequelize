@@ -11,7 +11,7 @@ module.exports = sails => {
                 exposeToGlobal: true
             }
         },
-        configure () {
+        configure() {
             const cls = sails.config[this.configKey].clsNamespace;
             // If custom log function is specified, use it for SQL logging or use sails logger of defined level
             if (typeof cls === 'string' && cls !== '') {
@@ -25,7 +25,7 @@ module.exports = sails => {
 
             // Override sails internal loadModels function
             // needs to be done in configure()
-            sails.modules.loadModels = function load (cb) {
+            sails.modules.loadModels = function load(cb) {
 
                 // call the original sails loadModels function so we have access to it's returned models
                 originalLoadModels((err, modelDefs) => {
@@ -48,7 +48,7 @@ module.exports = sails => {
                 });
             };
         },
-        initialize (next) {
+        initialize(next) {
 
             if (sails.config.hooks.orm === false) {
                 this.initAdapters();
@@ -65,7 +65,7 @@ module.exports = sails => {
             }
         },
 
-        reload (next) {
+        reload(next) {
             let connections;
             const self = this;
 
@@ -87,13 +87,13 @@ module.exports = sails => {
             });
         },
 
-        initAdapters () {
+        initAdapters() {
             if (typeof (sails.adapters) === 'undefined') {
                 sails.adapters = {};
             }
         },
 
-        initConnections () {
+        initConnections() {
             const connections = {};
             let connection, connectionName;
 
@@ -104,7 +104,7 @@ module.exports = sails => {
             const datastoreName = sails.config.models.connection || sails.config.models.datastore || 'default';
 
             sails.log.verbose('Using default connection named ' + datastoreName);
-            if (!datastores.hasOwnProperty(datastoreName)) {
+            if (!Object.prototype.hasOwnProperty.call(datastores, datastoreName)) {
                 throw new Error('Default connection \'' + datastoreName + '\' not found in config/connections');
             }
 
@@ -138,13 +138,13 @@ module.exports = sails => {
             return connections;
         },
 
-        initModels () {
+        initModels() {
             if (typeof (sails.models) === 'undefined') {
                 sails.models = {};
             }
         },
 
-        defineModels (models, connections) {
+        defineModels(models, connections) {
             let modelDef, modelName, modelClass, cm, im, connectionName;
             const sequelizeMajVersion = parseInt(Sequelize.version.split('.')[0], 10);
 
@@ -163,7 +163,9 @@ module.exports = sails => {
 
                 sails.log.verbose('Loading Sequelize model \'' + modelDef.globalId + '\'');
                 connectionName = modelDef.connection || modelDef.datastore || defaultConnection;
-                modelClass = connections[connectionName].define(modelDef.globalId, modelDef.attributes, modelDef.options);
+                modelClass = connections[connectionName].define(modelDef.globalId,
+                    modelDef.attributes,
+                    modelDef.options);
 
                 if (sequelizeMajVersion >= 4) {
                     for (cm in modelDef.options.classMethods) {
@@ -195,7 +197,7 @@ module.exports = sails => {
             }
         },
 
-        setAssociation (modelDef) {
+        setAssociation(modelDef) {
             if (modelDef.associations !== null) {
                 sails.log.verbose('Loading associations for \'' + modelDef.globalId + '\'');
                 if (typeof modelDef.associations === 'function') {
@@ -204,7 +206,7 @@ module.exports = sails => {
             }
         },
 
-        setDefaultScope (modelDef, model) {
+        setDefaultScope(modelDef, model) {
             if (modelDef.defaultScope !== null) {
                 sails.log.verbose('Loading default scope for \'' + modelDef.globalId + '\'');
                 if (typeof modelDef.defaultScope === 'function') {
@@ -214,8 +216,8 @@ module.exports = sails => {
             }
         },
 
-        migrateSchema (next, connections, models) {
-            let connectionDescription, connectionName, migrate, forceSyncFlag, alterFlag;
+        migrateSchema(next, connections, models) {
+            let connectionDescription, cn, migrate, forceSyncFlag, alterFlag;
             const syncTasks = [];
 
             // Try to read settings from old Sails then from the new.
@@ -243,13 +245,14 @@ module.exports = sails => {
                         alterFlag = false;
                 }
 
-                for (connectionName in datastores) {
-                    (function(){
+                for (cn in datastores) {
+                    (function (connectionName) {
                         var syncConnectionName = connectionName;
                         connectionDescription = datastores[syncConnectionName];
 
-                        // Skip waterline connections
-                        if (connectionDescription.adapter) {
+                        // Skip waterline and possible non sequelize connections
+                        if (connectionDescription.adapter ||
+                            !(connectionDescription.dialect || connectionDescription.options.dialect)) {
                             return;
                         }
 
@@ -269,14 +272,17 @@ module.exports = sails => {
                                         schemas.push(tableSchema);
                                     }
                                 }
-
+                                console.log('migrateSchema in ' + syncConnectionName);
                                 return connections[syncConnectionName].sync({ force: forceSyncFlag, alter: alterFlag });
                             }));
 
                         } else {
-                            syncTasks.push(connections[syncConnectionName].sync({ force: forceSyncFlag, alter: alterFlag }));
+                            syncTasks.push(connections[syncConnectionName].sync({
+                                force: forceSyncFlag,
+                                alter: alterFlag
+                            }));
                         }
-                    }());
+                    }(cn));
                 }
 
                 Promise.all(syncTasks).then(() => next()).catch(e => next(e));

@@ -41,7 +41,9 @@ module.exports.sequelize = {
 
 ## Connections
 
-Sequelize connection
+Sequelize connection.
+
+**Important note:** `dialect` keyword MUST be present in connection or connection.options.
 
 ```javascript
 somePostgresqlServer: {

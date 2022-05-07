@@ -20,7 +20,11 @@ jobs:
                 POSTGRES_DB: sequelize
             ports:
                 - 5432:5432
-            options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+            options:
+                --health-cmd pg_isready
+                --health-interval 10s
+                --health-timeout 5s
+                --health-retries 5
     strategy:
       matrix:
         node-version: [10, 12, 14, 16]
@@ -30,8 +34,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: |
-            find ./test/fixtures -path "*/config/*" -not -path "*/node_modules/*" \( -name "datastores.js" -or -name "connections.js" \) -exec sed -i -e "s/: 'localhost'/: 'postgres'/g" {} \;
       - run: npm ci
       - run: npm test
         env:

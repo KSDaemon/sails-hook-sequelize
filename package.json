@@ -54,7 +54,7 @@
     "sails-hook-orm": "^4.0.1",
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
-    "sqlite3": "^4.2.0",
+    "sqlite3": "^5.0.8",
     "supertest": "^4.0.2"
   },
   "dependencies": {

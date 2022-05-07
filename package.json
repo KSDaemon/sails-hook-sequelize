@@ -14,8 +14,8 @@
     "pretest": "cd ./test/fixtures/v0.11-app && npm i --prefix ./ && cd - && cd ./test/fixtures/v0.12-app && npm i --prefix ./ && cd -",
     "posttest": "git checkout -- test/fixtures/v1.x-sqlite3-app/db/sequelize.sqlite && git checkout -- test/fixtures/v1.x-sequelize-waterline-app/db/sequelize.sqlite"
   },
-  "engines" : {
-    "node" : ">=12.0.0"
+  "engines": {
+    "node": ">=12.0.0"
   },
   "nyc": {
     "include": [
@@ -58,7 +58,7 @@
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
     "sqlite3": "^5.0.8",
-    "supertest": "^4.0.2"
+    "supertest": "^6.2.3"
   },
   "dependencies": {
     "continuation-local-storage": "^3.2.1",

@@ -27,7 +27,7 @@ jobs:
                 --health-retries 5
     strategy:
       matrix:
-        node-version: [10, 12, 14, 16]
+        node-version: [12, 14, 16]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

@@ -30,6 +30,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - run: find ./test/fixtures -path "*/config/*" -not -path "*/node_modules/*" \( -name "datastores.js" -or -name "connections.js" \) -exec sed -i -e "s/:\s+'localhost'/: 'postgres'/g" {} \;
       - run: npm ci
       - run: npm test
         env:

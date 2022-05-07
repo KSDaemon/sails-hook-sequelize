@@ -51,7 +51,7 @@
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
     "sails": "^1.2.4",
-    "sails-hook-orm": "^3.0.1",
+    "sails-hook-orm": "^4.0.1",
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
     "sqlite3": "^4.2.0",

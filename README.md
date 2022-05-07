@@ -2,12 +2,10 @@
 Sails.js hook to use sequelize ORM
 
 [![NPM version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
+[![Build Status][gh-build-test-image]][gh-build-test-url]
 [![Code coverage][coveralls-image]][coveralls-url]
-[![Dependency Status][depstat-image]][depstat-url]
-[![DevDependency Status][depstat-dev-image]][depstat-dev-url]
 [![MIT License][license-image]][license-url]
-
+[![Known Vulnerabilities][snyk-image]][snyk-url]
 
 # Installation
 
@@ -115,17 +113,14 @@ Thanks JetBrains for support! Best IDEs for every language!
 [npm-url]: https://www.npmjs.com/package/sails-hook-sequelize
 [npm-image]: https://img.shields.io/npm/v/sails-hook-sequelize.svg?style=flat
 
-[travis-url]: https://travis-ci.org/KSDaemon/sails-hook-sequelize
-[travis-image]: https://img.shields.io/travis/KSDaemon/sails-hook-sequelize/master.svg?style=flat
+[gh-build-test-url]: https://github.com/KSDaemon/sails-hook-sequelize/actions/workflows/build-and-test.yml
+[gh-build-test-image]: https://github.com/KSDaemon/sails-hook-sequelize/actions/workflows/build-and-test.yml/badge.svg
 
 [coveralls-url]: https://coveralls.io/github/KSDaemon/sails-hook-sequelize
 [coveralls-image]: https://img.shields.io/coveralls/KSDaemon/sails-hook-sequelize/master.svg?style=flat
 
-[depstat-url]: https://david-dm.org/KSDaemon/sails-hook-sequelize
-[depstat-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize.svg?style=flat
-
-[depstat-dev-url]: https://david-dm.org/KSDaemon/sails-hook-sequelize
-[depstat-dev-image]: https://david-dm.org/KSDaemon/sails-hook-sequelize/master-status.svg?style=flat
-
 [license-image]: https://img.shields.io/badge/license-MIT-blue.svg
 [license-url]: http://opensource.org/licenses/MIT
+
+[snyk-image]: https://snyk.io/test/github/KSDaemon/sails-hook-sequelize/badge.svg?targetFile=package.json
+[snyk-url]: https://snyk.io/test/github/KSDaemon/sails-hook-sequelize?targetFile=package.json

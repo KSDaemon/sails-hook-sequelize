@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: psql -h 127.0.0.1 -u postgres -d sequelize -c 'create schema if not exists sails;'
+      - run: psql -h 127.0.0.1 -U postgres -d sequelize -c 'create schema if not exists sails;'
       - run: npm ci
       - run: npm test
         env:

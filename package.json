@@ -45,7 +45,7 @@
   "devDependencies": {
     "coveralls": "^3.1.1",
     "decache": "^4.6.1",
-    "eslint": "^7.1.0",
+    "eslint": "^8.15.0",
     "istanbul": "^0.4.5",
     "json3": "^3.3.3",
     "minimatch": "^5.0.1",

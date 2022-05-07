@@ -272,7 +272,6 @@ module.exports = sails => {
                                         schemas.push(tableSchema);
                                     }
                                 }
-                                console.log('migrateSchema in ' + syncConnectionName);
                                 return connections[syncConnectionName].sync({ force: forceSyncFlag, alter: alterFlag });
                             }));
 

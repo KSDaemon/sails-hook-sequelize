@@ -61,7 +61,7 @@
     "supertest": "^6.2.3"
   },
   "dependencies": {
-    "continuation-local-storage": "^3.2.1",
+    "cls-hooked": "^4.2.2",
     "sequelize": "^6.19.0"
   },
   "directories": {

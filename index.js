@@ -15,7 +15,7 @@ module.exports = sails => {
             const cls = sails.config[this.configKey].clsNamespace;
             // If custom log function is specified, use it for SQL logging or use sails logger of defined level
             if (typeof cls === 'string' && cls !== '') {
-                Sequelize.useCLS(require('continuation-local-storage').createNamespace(cls));
+                Sequelize.useCLS(require('cls-hooked').createNamespace(cls));
             }
 
             if (sails.config[this.configKey].exposeToGlobal) {

@@ -44,25 +44,25 @@
   "license": "MIT",
   "devDependencies": {
     "coveralls": "^3.1.1",
-    "decache": "^4.6.1",
+    "decache": "^4.6.2",
     "eslint": "^8.15.0",
     "istanbul": "^0.4.5",
     "json3": "^3.3.3",
     "minimatch": "^5.0.1",
     "mocha": "^10.0.0",
     "nyc": "^15.1.0",
-    "pg": "^8.7.3",
+    "pg": "^8.11.1",
     "pg-hstore": "^2.3.4",
-    "sails": "^1.2.4",
+    "sails": "^1.5.6",
     "sails-hook-orm": "^4.0.1",
     "sails-memory": "^0.10.7",
     "should": "^13.2.3",
-    "sqlite3": "^5.0.8",
-    "supertest": "^6.2.3"
+    "sqlite3": "^5.1.6",
+    "supertest": "^6.3.3"
   },
   "dependencies": {
     "cls-hooked": "^4.2.2",
-    "sequelize": "^6.19.0"
+    "sequelize": "^6.32.1"
   },
   "directories": {
     "test": "test"
